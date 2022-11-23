@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\FigGroup;
 use App\Entity\Figure;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -16,7 +17,7 @@ class FigureFixtures extends Fixture
                     ->setContent("<p>Contenu figure n°$i</p>")
                     ->setCreatedAt(new \DateTimeImmutable())
                     ->setUpdatedAt(new \DateTime())
-                    ->setFigGroup("Groupe figure n°$i")
+                    ->setFigGroup(new FigGroup())
                     ->setSlug("-nom-article-$i");
             $manager->persist($figure);
         }

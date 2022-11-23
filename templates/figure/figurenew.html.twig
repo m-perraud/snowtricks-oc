@@ -1,26 +1,21 @@
 {% extends 'base.html.twig' %}
 
+{% form_theme formFigure 'foundation_5_layout.html.twig' %}
 
 {% block body %}
 
 
 {{ form_start(formFigure) }}
 
-<div class="form-group">
-    <label for="">Titre</label>
-    {{ form_widget(formFigure.title) }}
+{{ form_row(formFigure.title) }}
+{{ form_row(formFigure.content) }}
+{{ form_row(formFigure.figGroup) }}
+
+    <button type="submit" class="btn btn-warning"> Ajouter la figure </button>
+
+{{ form_errors(formFigure.title) }}
 </div>
 
-<div class="form-group">
-    <label for="">Contenu</label>
-    {{ form_widget(formFigure.content) }}
-</div>
-
-<div class="form-group">
-    <label for="">Groupe</label>
-    {{ form_widget(formFigure.figGroup) }}
-</div>
-
-{{form_end(formFigure)}}
+{{ form_end(formFigure) }}
 
 {% endblock %}

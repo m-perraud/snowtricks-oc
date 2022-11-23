@@ -14,36 +14,23 @@ class Comment
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $Author = null;
-
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $Content = null;
 
-    #[ORM\Column]
-    private ?int $linkedFigure = null;
+    #[ORM\ManyToOne(inversedBy: 'linkedFigure')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Figure $linkedFigure = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $Image = null;
+    #[ORM\ManyToOne(inversedBy: 'commentAuthor')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $author = null;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getAuthor(): ?string
-    {
-        return $this->Author;
-    }
-
-    public function setAuthor(string $Author): self
-    {
-        $this->Author = $Author;
-
-        return $this;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable
@@ -70,26 +57,26 @@ class Comment
         return $this;
     }
 
-    public function getLinkedFigure(): ?int
+    public function getLinkedFigure(): ?Figure
     {
         return $this->linkedFigure;
     }
 
-    public function setLinkedFigure(int $linkedFigure): self
+    public function setLinkedFigure(?Figure $linkedFigure): self
     {
         $this->linkedFigure = $linkedFigure;
 
         return $this;
     }
 
-    public function getImage(): ?string
+    public function getAuthor(): ?User
     {
-        return $this->Image;
+        return $this->author;
     }
 
-    public function setImage(string $Image): self
+    public function setAuthor(?User $author): self
     {
-        $this->Image = $Image;
+        $this->author = $author;
 
         return $this;
     }

@@ -3,11 +3,15 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -26,6 +30,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $profilImage = null;
+
+    #[ORM\OneToMany(mappedBy: 'author', targetEntity: comment::class)]
+    private Collection $commentAuthor;
+
+    public function __construct()
+    {
+        $this->commentAuthor = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -95,5 +110,47 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getProfilImage(): ?string
+    {
+        return $this->profilImage;
+    }
+
+    public function setProfilImage(string $profilImage): self
+    {
+        $this->profilImage = $profilImage;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, comment>
+     */
+    public function getCommentAuthor(): Collection
+    {
+        return $this->commentAuthor;
+    }
+
+    public function addCommentAuthor(comment $commentAuthor): self
+    {
+        if (!$this->commentAuthor->contains($commentAuthor)) {
+            $this->commentAuthor->add($commentAuthor);
+            $commentAuthor->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentAuthor(comment $commentAuthor): self
+    {
+        if ($this->commentAuthor->removeElement($commentAuthor)) {
+            // set the owning side to null (unless already changed)
+            if ($commentAuthor->getAuthor() === $this) {
+                $commentAuthor->setAuthor(null);
+            }
+        }
+
+        return $this;
     }
 }
