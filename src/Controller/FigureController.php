@@ -3,12 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Figure;
+use App\Form\FigureType;
 use App\Repository\FigureRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class FigureController extends AbstractController
@@ -34,28 +33,14 @@ class FigureController extends AbstractController
         ]);
     }
 
+
     #[Route('/figurenew', name: 'figure_new')]
     public function figureNew(Request $request): Response
     {
+        
         $figure = new Figure();
 
-        $form = $this->createFormBuilder($figure)
-                    ->add('title', TextType::class, [
-                        'attr' => [
-                            'placeholder' => "Titre"
-                        ]
-                    ])
-                    ->add('content', TextareaType::class, [
-                        'attr' => [
-                            'placeholder' => "Contenu"
-                        ]
-                    ])
-                    ->add('figGroup', TextType::class, [
-                        'attr' => [
-                            'placeholder' => "Nom du groupe"
-                        ]
-                    ])
-                    ->getForm();
+        $form = $this->createForm(FigureType::class, $figure);
 
         $form->handleRequest($request);
 
@@ -71,4 +56,6 @@ class FigureController extends AbstractController
             'formFigure' => $form->createView()
         ]);
     }
+
+
 }
