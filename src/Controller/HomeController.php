@@ -19,15 +19,6 @@ class HomeController extends AbstractController
         return $this->render('home/home.html.twig', [
             'controller_name' => 'HomeController',
             'figures' => $figures 
-
-        ]);
-    }
-
-    #[Route('/forgotpw', name: 'forgot_pw')]
-    public function forgotPw(): Response
-    {
-        return $this->render('home/forgotpw.html.twig', [
-            'controller_name' => 'HomeController',
         ]);
     }
 

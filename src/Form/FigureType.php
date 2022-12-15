@@ -6,7 +6,9 @@ use App\Entity\Figure;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class FigureType extends AbstractType
@@ -24,11 +26,18 @@ class FigureType extends AbstractType
                 'attr' => [ 
                     'placeholder'=> "Contenu de l'article" 
                 ]])
-            /* ->add('figGroup', TextType::class, [
-                'label' => "Groupe",
-                'attr' => [ 
-                    'placeholder'=> "Nom du groupe" 
-                ]]) */ ;
+            ->add('figGroup', ChoiceType::class, [
+                    'choices'  => [
+                        'Maybe' => null,
+                        'Yes' => true,
+                        'No' => false,
+                    ]])
+                    ->add('images', FileType::class,[
+                        'label' => false,
+                        'multiple' => true,
+                        'mapped' => false,
+                        'required' => false
+                    ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
