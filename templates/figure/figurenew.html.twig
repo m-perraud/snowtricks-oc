@@ -11,11 +11,31 @@
 {{ form_row(formFigure.content) }}
 
 
-    <button type="submit" class="btn btn-warning"> Ajouter la figure </button>
+    <button type="submit" class="btn btn-warning"> 
+        {% if editMode %}
+            Enregistrer les modifications
+        {% else %}
+        Ajouter la figure 
+        {% endif %}
+    </button>
 
 {{ form_errors(formFigure.title) }}
 </div>
 
 {{ form_end(formFigure) }}
+
+{% if app.request.attributes.get('_route') == 'figure_mods' %}
+<h2>Images</h2>
+        {% for image in figure.linkedFigureImages %}
+            <div>
+                <img src="{{ image.imageUrl }}" alt="" width="150">
+
+                {# On ajoute un lien permettant de supprimer une image (sera géré en Ajax) #}
+                <a href="{{ path('delete_img', {id: image.id})}}" data-delete data-token="{{ csrf_token('delete' ~ image.id )}}">Supprimer</a>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+
 
 {% endblock %}

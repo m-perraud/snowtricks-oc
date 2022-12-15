@@ -4,8 +4,6 @@
 {% block body %}
 
 
-
-
             <div class="blog-details-two-wrapper">
                 <div class="container">
                     <div class="row">
@@ -17,7 +15,7 @@
                                 <h2 class="blog-details-two-post-title">MEDIAS EN DESSOUS</h2>
 
                                 <div class="blog-details-two-tags">
-                                    <a href="#" class="btn-large wordpress">{{ figures.figGroup }}</a>
+                                    <a href="#" class="btn-large wordpress">{{ figures.figGroup.name }}</a>
                                     <a href="#" class="btn-large woocommerce">Créée le {{ figures.createdAt|date('d-m-Y') }}</a>
                                     <a href="#" class="btn-large magento">Modifiée le {{ figures.updatedAt|date('d-m-Y') }}</a>
                                 </div>
@@ -44,7 +42,6 @@
             <div class="comment-area section-space--pt_60 section-space--pb_100">
                 <div class="container">
 
-                
                     <div class="row">
                         <div class="col-lg-10 m-auto">
                             <div class="section-title">
@@ -65,27 +62,30 @@
                                 </div>
                             </form>
                         </div>
+                        
                     </div>
 
 
                     <div class="row">
                         <div class="col-lg-10 m-auto">
                             <div class="comment-list-wrapper">
+                                
 
-                                <h3 class="widget-title mb-30">Comments (3) </h3>
+                                <h3 class="widget-title mb-30">Comments</h3>
+                                {% for comment in figures.linkedFigure %}
                                 <ol class="comment-list">
                                     <li class="comment">
                                         <div class="comment-2">
                                             <div class="comment-author-info">
                                                 <div class="comment-author vcard">
-                                                    <img alt="" src="/images/comments/comments-1.png">
+                                                    <img alt="" src="{{ comment.author.profilImage }}">
                                                 </div>
                                                 <div class="comment-content">
                                                     <div class="meta">
                                                         <div class="comment-content-top">
                                                             <div class="comment-actions">
-                                                                <h6 class="fn">Edna Watson</h6>
-                                                                <div class="comment-datetime"> Product Designer, USA </div> <span class="separator">||</span> <span class="time">35 minutes ago </span>
+                                                                <h6 class="fn">{{ comment.author.username }}</h6>
+                                                                    <span class="time"> {{ comment.createdAt|date('d-m-Y') }} </span>
                                                             </div>
                                                         </div>
                                                         <a class="comment-reply-link" href="#"><i class="icofont-reply"></i> Reply</a>
@@ -93,73 +93,20 @@
                                                 </div>
                                             </div>
                                             <div class="comment-text">
-                                                <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form
-                                                    humour, or randomised words which don't look even slightly believable. If you are going to use a passage of orem psum
-                                                    to be sure there isn't anything embarrassing.</p>
+                                                <p>{{ comment.content }}</p>
                                             </div>
                                         </div>
-                                        <ol class="children">
-                                            <li class="comment ">
-                                                <div class="comment-reply-wrap">
-                                                    <div class="comment-author-info">
-                                                        <div class="comment-author vcard">
-                                                            <img alt="" src="assets/images/comments/comments-2.png">
-                                                        </div>
-                                                        <div class="comment-content">
-                                                            <div class="meta">
-                                                                <div class="comment-content-top">
-                                                                    <div class="comment-actions">
-                                                                        <h6 class="fn">Robert Morgan</h6>
-                                                                        <div class="comment-datetime"> Product Designer, USA </div> <span class="separator">||</span> <span class="time">35 minutes ago </span>
-                                                                    </div>
-                                                                </div>
-                                                                <a class="comment-reply-link" href="#"><i class="icofont-reply"></i> Reply</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="comment-text">
-                                                        <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in
-                                                            humour, or randomised words which don't look even slightly believable. If you are going to use a passage
-                                                            to be sure there isn't anything embarrassing.</p>
-                                                    </div>
-                                                </div>
-                                            </li><!-- comment End -->
-                                            <li class="comment ">
-                                                <div class="comment-reply-wrap">
-                                                    <div class="comment-author-info">
-                                                        <div class="comment-author vcard">
-                                                            <img alt="" src="assets/images/comments/comments-3.png">
-                                                        </div>
-                                                        <div class="comment-content">
-                                                            <div class="meta">
-                                                                <div class="comment-content-top">
-                                                                    <div class="comment-actions">
-                                                                        <h6 class="fn">Rochelle Hunt</h6>
-                                                                        <div class="comment-datetime"> Product Designer, USA </div> <span class="separator">||</span> <span class="time">35 minutes ago </span>
-                                                                    </div>
-                                                                </div>
-                                                                <a class="comment-reply-link" href="#"><i class="icofont-reply"></i> Reply</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="comment-text">
-                                                        <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in
-                                                            humour, or randomised words which don't look even slightly believable. If you are going to use a passage
-                                                            to be sure there isn't anything embarrassing.</p>
-                                                    </div>
-                                                </div>
-                                            </li><!-- comment End -->
-                                        </ol><!-- children End -->
+                                        {% endfor  %}
                                     </li><!-- comment End-->
-
                                 </ol>
                             </div>
+                            
                         </div>
                     </div>
-
                 </div>
             </div>
             <!-- Comment Area End -->
+
 
 
 {% endblock %}
