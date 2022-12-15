@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\FigureRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -27,10 +29,27 @@ class Figure
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $figGroup = null;
-
-    #[ORM\Column(length: 255)]
     private ?string $slug = null;
+
+    #[ORM\ManyToOne(inversedBy: 'groupName')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?FigGroup $figGroup = null;
+
+    #[ORM\OneToMany(mappedBy: 'linkedFigure', targetEntity: Comment::class)]
+    private Collection $linkedFigure;
+
+    #[ORM\OneToMany(mappedBy: 'linkedFigure', targetEntity: Images::class)]
+    private Collection $LinkedFigureImages;
+
+    #[ORM\OneToMany(mappedBy: 'linkedFigure', targetEntity: Videos::class)]
+    private Collection $linkedFigureVideos;
+
+    public function __construct()
+    {
+        $this->linkedFigure = new ArrayCollection();
+        $this->LinkedFigureImages = new ArrayCollection();
+        $this->linkedFigureVideos = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -85,18 +104,6 @@ class Figure
         return $this;
     }
 
-    public function getFigGroup(): ?string
-    {
-        return $this->figGroup;
-    }
-
-    public function setFigGroup(string $figGroup): self
-    {
-        $this->figGroup = $figGroup;
-
-        return $this;
-    }
-
     public function getSlug(): ?string
     {
         return $this->slug;
@@ -105,6 +112,108 @@ class Figure
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getFigGroup(): ?FigGroup
+    {
+        return $this->figGroup;
+    }
+
+    public function setFigGroup(?FigGroup $figGroup): self
+    {
+        $this->figGroup = $figGroup;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comment>
+     */
+    public function getLinkedFigure(): Collection
+    {
+        return $this->linkedFigure;
+    }
+
+    public function addLinkedFigure(Comment $linkedFigure): self
+    {
+        if (!$this->linkedFigure->contains($linkedFigure)) {
+            $this->linkedFigure->add($linkedFigure);
+            $linkedFigure->setLinkedFigure($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLinkedFigure(Comment $linkedFigure): self
+    {
+        if ($this->linkedFigure->removeElement($linkedFigure)) {
+            // set the owning side to null (unless already changed)
+            if ($linkedFigure->getLinkedFigure() === $this) {
+                $linkedFigure->setLinkedFigure(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Images>
+     */
+    public function getLinkedFigureImages(): Collection
+    {
+        return $this->LinkedFigureImages;
+    }
+
+    public function addLinkedFigureImage(Images $linkedFigureImage): self
+    {
+        if (!$this->LinkedFigureImages->contains($linkedFigureImage)) {
+            $this->LinkedFigureImages->add($linkedFigureImage);
+            $linkedFigureImage->setLinkedFigure($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLinkedFigureImage(Images $linkedFigureImage): self
+    {
+        if ($this->LinkedFigureImages->removeElement($linkedFigureImage)) {
+            // set the owning side to null (unless already changed)
+            if ($linkedFigureImage->getLinkedFigure() === $this) {
+                $linkedFigureImage->setLinkedFigure(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Videos>
+     */
+    public function getLinkedFigureVideos(): Collection
+    {
+        return $this->linkedFigureVideos;
+    }
+
+    public function addLinkedFigureVideo(Videos $linkedFigureVideo): self
+    {
+        if (!$this->linkedFigureVideos->contains($linkedFigureVideo)) {
+            $this->linkedFigureVideos->add($linkedFigureVideo);
+            $linkedFigureVideo->setLinkedFigure($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLinkedFigureVideo(Videos $linkedFigureVideo): self
+    {
+        if ($this->linkedFigureVideos->removeElement($linkedFigureVideo)) {
+            // set the owning side to null (unless already changed)
+            if ($linkedFigureVideo->getLinkedFigure() === $this) {
+                $linkedFigureVideo->setLinkedFigure(null);
+            }
+        }
 
         return $this;
     }

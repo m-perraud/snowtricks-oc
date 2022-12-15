@@ -1,26 +1,41 @@
 {% extends 'base.html.twig' %}
 
+{% form_theme formFigure 'foundation_5_layout.html.twig' %}
 
 {% block body %}
 
 
 {{ form_start(formFigure) }}
 
-<div class="form-group">
-    <label for="">Titre</label>
-    {{ form_widget(formFigure.title) }}
+{{ form_row(formFigure.title) }}
+{{ form_row(formFigure.content) }}
+
+
+    <button type="submit" class="btn btn-warning"> 
+        {% if editMode %}
+            Enregistrer les modifications
+        {% else %}
+        Ajouter la figure 
+        {% endif %}
+    </button>
+
+{{ form_errors(formFigure.title) }}
 </div>
 
-<div class="form-group">
-    <label for="">Contenu</label>
-    {{ form_widget(formFigure.content) }}
-</div>
+{{ form_end(formFigure) }}
 
-<div class="form-group">
-    <label for="">Groupe</label>
-    {{ form_widget(formFigure.figGroup) }}
-</div>
+{% if app.request.attributes.get('_route') == 'figure_mods' %}
+<h2>Images</h2>
+        {% for image in figure.linkedFigureImages %}
+            <div>
+                <img src="{{ image.imageUrl }}" alt="" width="150">
 
-{{form_end(formFigure)}}
+                {# On ajoute un lien permettant de supprimer une image (sera géré en Ajax) #}
+                <a href="{{ path('delete_img', {id: image.id})}}" data-delete data-token="{{ csrf_token('delete' ~ image.id )}}">Supprimer</a>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+
 
 {% endblock %}
