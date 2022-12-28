@@ -53,4 +53,12 @@ class HomeController extends AbstractController
             'controller_name' => 'HomeController',
         ]);
     }
+
+    #[Route('/pagination', name: 'app_pagination')]
+    public function pagination(): Response
+    {
+        return $this->render('home/page500.html.twig', [
+            'controller_name' => 'HomeController',
+        ]);
+    }
 } 

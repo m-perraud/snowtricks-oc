@@ -30,8 +30,15 @@
             <div>
                 <img src="{{ image.imageUrl }}" alt="" width="150">
 
-                {# On ajoute un lien permettant de supprimer une image (sera géré en Ajax) #}
-                <a href="{{ path('delete_img', {id: image.id})}}" data-delete data-token="{{ csrf_token('delete' ~ image.id )}}">Supprimer</a>
+
+            {#Attention, si on est pas en form ça ne fonctionnera pas #}
+            <form action="{{ path('delete_img', {id: image.id})}}" method="post">
+            {# the argument of csrf_token() is an arbitrary string used to generate the token #}
+            <input type="hidden" name="token" value="{{ csrf_token('delete') }}"/>
+
+            <button type="submit">Supprimer</button>
+            </form>
+
             </div>
         {% endfor %}
     {% endif %}

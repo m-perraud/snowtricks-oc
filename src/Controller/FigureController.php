@@ -5,7 +5,9 @@ namespace App\Controller;
 use App\Entity\Figure;
 use App\Entity\Images;
 use App\Entity\Videos;
+use App\Entity\Comment;
 use App\Form\FigureType;
+use App\Form\CommentType;
 use App\Repository\FigureRepository;
 use App\Repository\ImagesRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,13 +22,34 @@ class FigureController extends AbstractController
 {
 
     #[Route('/figure/{slug}', name: 'figure_details')]
-    public function figureDetails(FigureRepository $repo, string $slug): Response
+    public function figureDetails(FigureRepository $repo, string $slug, Request $request, EntityManagerInterface $manager): Response
     {
-    $figures = $repo->findOneBy(['slug' => $slug]);
+    $figure = $repo->findOneBy(['slug' => $slug]);
+
+    $comment = new Comment();
+
+    $form = $this->createForm(CommentType::class, $comment);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+            $comment->setCreatedAt(new \DateTimeImmutable());
+            $comment->setLinkedFigure($figure);
+            // Avec le $this->getUser() on a directement le user connecté 
+            $comment->setAuthor($this->getUser());
+
+        // Pas nécessaire :
+        // $figure = $form->getData();
+
+        $manager->persist($comment);
+        $manager->flush();
+
+        return $this->redirectToRoute('figure_details', ['slug' => $figure->getSlug()]);
+    }
 
     return $this->render('figure/figuredetails.html.twig', [
         'controller_name' => 'FigureController',
-        'figures' => $figures
+        'formComment' => $form->createView(),
+        'figures' => $figure
     ]);
 }
 
@@ -47,22 +70,22 @@ class FigureController extends AbstractController
             if(!$figure->getId()){
                 $figure->setCreatedAt(new \DateTimeImmutable());
             } else {
-                $figure->setUpdatedAt(new \DateTimeInterface());
+                $figure->setUpdatedAt(new \DateTimeImmutable());
             }
 
             $images = $form->get('images')->getData();
-
-
 
             // Il faudra vérifier si on a déjà une main ou pas. 
             $haveMainImage = false;
 
             foreach($images as $image){
 
+                /*
                 if(!$haveMainImage){
                     $image->setMainImage(true);
                     $haveMainImage= true;
                 }
+                */
 
                 $file = md5(uniqid()).'.'.$image->guessExtension();
                 $image->move(
@@ -78,7 +101,7 @@ class FigureController extends AbstractController
             // Pas nécessaire :
             // $figure = $form->getData();
 
-            return $this->redirectToRoute('figure_details', ['id' => $figure->getId()]);
+            return $this->redirectToRoute('figure_details', ['slug' => $figure->getSlug()]);
         }
 
         return $this->render('figure/figurenew.html.twig', [
@@ -91,10 +114,14 @@ class FigureController extends AbstractController
 
 
     #[Route('/deleteimg/{id}', name: 'delete_img')]
-    public function deleteImage(EntityManagerInterface $doctrine, Images $image){
+    public function deleteImage(EntityManagerInterface $doctrine, Images $image, Request $request){
 
+        $csrfToken = $request->request->get('token');
+
+        if($this->isCsrfTokenValid('delete', $csrfToken)){
             $doctrine->remove($image);
             $doctrine->flush();
+        }
 
             return $this->redirectToRoute('figure_mods', ['id' => $image->getLinkedFigure()->getId()]);
     }

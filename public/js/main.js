@@ -1,3 +1,4 @@
+
 (function ($) {
     "use strict";
 
@@ -7,7 +8,7 @@
 	var $html = $('html');
 	var $body = $('body');
 
-      /*=============================================
+    /*=============================================
     =       Menu sticky & Scroll to top          =
     =============================================*/
 	var windows = $(window);
@@ -129,7 +130,7 @@
     /*=========================================
     =             open menu Active            =
     ===========================================*/
-     $('.openmenu-trigger').on('click', function (e) {
+    $('.openmenu-trigger').on('click', function (e) {
         e.preventDefault();
         $('.open-menuberger-wrapper').addClass('is-visiable');
     });
@@ -139,7 +140,7 @@
         $('.open-menuberger-wrapper').removeClass('is-visiable');
     });
     
-      
+    
     /*=========================================
     =             open menu Active            =
     ===========================================*/
@@ -174,7 +175,7 @@
     $("#hidden-icon-trigger").on('click', function(){
         $("#hidden-icon-wrapper").toggleClass("active");
     });
-     
+    
     /*=========================================
     =             open menu Active            =
     ===========================================*/
