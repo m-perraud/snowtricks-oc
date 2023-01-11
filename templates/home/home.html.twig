@@ -68,15 +68,15 @@
 
             <tr id="replaceMe">
                 <td colspan="3">
-                    <button class='btn' hx-get="/contacts/?page=2" 
+                    <button class='btn' hx-get="{{ path('app_pagination') }}" 
+                                        hx-trigger="click"
                                         hx-target="#replaceMe" 
                                         hx-swap="outerHTML">
-                        Load More Agents... <img class="htmx-indicator" src="/img/bars.svg">
+                        Charger plus de figures <img class="htmx-indicator" src="/img/bars.svg">
                     </button>
                 </td>
             </tr> 
 
-
-
+<div id="replaceMe"></div>
 
 {% endblock %}

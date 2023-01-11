@@ -55,10 +55,13 @@ class HomeController extends AbstractController
     }
 
     #[Route('/pagination', name: 'app_pagination')]
-    public function pagination(): Response
+    public function pagination(ManagerRegistry $doctrine): Response
     {
-        return $this->render('home/page500.html.twig', [
+        $figures = $doctrine->getRepository(Figure::class)->findAll();
+
+        return $this->render('home/pagination.html.twig', [
             'controller_name' => 'HomeController',
+            'figures' => $figures
         ]);
     }
 } 

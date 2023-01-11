@@ -14,25 +14,26 @@
                                 <div class="login-header mb-40">
                                     <h5>REGISTER</h5>
                                 </div>
-
+    {{ form_start(registrationForm) }}
                                 <form action="{{ path('app_register') }}" method="post">
-                                    <input type="text" id="username" name="_username" value="{{ last_username }}" placeholder="Nom d'utilisateur">
-                                    <input type="password" id="password" name="_password" placeholder="Mot de passe">
+                                        {{ form_row(registrationForm.userMail, {
+                                            label: 'Mail'
+                                        }) }}
+                                        {{ form_row(registrationForm.username, {
+                                            label: 'Identifiant'
+                                        }) }}
+                                        {{ form_row(registrationForm.plainPassword, {
+                                            label: 'Mot de passe'
+                                        }) }}
 									<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-                                    <div class="remember-forget-wrap mb-30">
-                                        <div class="remember-wrap">
-                                            <input type="checkbox">
-                                            <p>Remember</p>
-                                            <span class="checkmark"></span>
-                                        </div>
-                                        <div class="forget-wrap">
-                                            <a href="#">Forgot your password?</a>
-                                        </div>
-                                    </div>
-                                    <button type="submit" class="btn-primary btn-large">Log in</button>
+
+                                        {{ form_row(registrationForm.agreeTerms) }}
+
+                                    <button type="submit" class="btn-primary btn-large">Register</button>
                                     <div class="member-register mt-5">
-                                        <p> Vous n'êtes pas inscrit ? <a href="register.html"> Inscrivez-vous maintenant.</a></p>
+                                        <p> Vous êtes déjà inscrit ? <a href="register.html"> Connectez-vous maintenant.</a></p>
                                     </div>
+                                        {{ form_end(registrationForm) }}
                                 </form>
 
                             </div>
@@ -44,15 +45,4 @@
         </div>
     </div>
 
-    <h1>Register</h1>
-
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.username) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
-
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
 {% endblock %}

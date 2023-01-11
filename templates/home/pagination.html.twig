@@ -1,0 +1,31 @@
+
+                    <div class="row">
+                    {% for figure in figures %}
+                        <div class="col-lg-2 col-md-6 col-sm-6">
+                            
+                            <div class="single-team-area" data-aos="fade-up">
+                                <div class="team-thum">
+
+                                {% for image in figure.linkedFigureImages %}
+                                {% if image.mainImage == true %}
+                                <img src=" {{ image.imageUrl }}" alt="">
+                                {% endif %}
+                                {% endfor  %}
+
+                                </div>
+                                <div class="team-content">
+                                    <div class="team-share-top">
+                                        <a href="{{ path('figure_details', {'slug': figure.slug } ) }}" class="shate-action-button"><i class="icofont-eye-alt"></i></a>
+                                        <ul class="team-social-share">
+                                            <li><a href="{{ path('figure_mods', {'id': figure.id } ) }}"><i class="icofont-edit"></i></a></li>
+                                            <li><a href="#"><i class="icofont-ui-delete"></i></a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="team-member-info">
+                                        <h6 class="name-title">{{ figure.title }}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>

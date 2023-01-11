@@ -11,6 +11,29 @@
 {{ form_row(formFigure.content) }}
 
 
+
+
+{% if app.request.attributes.get('_route') == 'figure_mods' %}
+<h2>Images</h2>
+        {% for image in figure.linkedFigureImages %}
+            <div>
+                <img src="{{ image.imageUrl }}" alt="" width="150">
+
+            {% if image.mainImage %}
+                Image principale
+            {% else %}
+            {#Attention, si on est pas en form ça ne fonctionnera pas #}
+            <form action="{{ path('delete_img', {id: image.id})}}" method="post">
+            {# the argument of csrf_token() is an arbitrary string used to generate the token #}
+            <input type="hidden" name="token" value="{{ csrf_token('delete') }}"/>
+            <button type="submit">Supprimer</button>
+            {% endif %}
+            </form>
+
+            </div>
+        {% endfor %}
+    {% endif %}
+
     <button type="submit" class="btn btn-warning"> 
         {% if editMode %}
             Enregistrer les modifications
@@ -23,26 +46,5 @@
 </div>
 
 {{ form_end(formFigure) }}
-
-{% if app.request.attributes.get('_route') == 'figure_mods' %}
-<h2>Images</h2>
-        {% for image in figure.linkedFigureImages %}
-            <div>
-                <img src="{{ image.imageUrl }}" alt="" width="150">
-
-
-            {#Attention, si on est pas en form ça ne fonctionnera pas #}
-            <form action="{{ path('delete_img', {id: image.id})}}" method="post">
-            {# the argument of csrf_token() is an arbitrary string used to generate the token #}
-            <input type="hidden" name="token" value="{{ csrf_token('delete') }}"/>
-
-            <button type="submit">Supprimer</button>
-            </form>
-
-            </div>
-        {% endfor %}
-    {% endif %}
-
-
 
 {% endblock %}

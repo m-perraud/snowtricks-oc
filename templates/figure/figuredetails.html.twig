@@ -11,8 +11,68 @@
                             <div class="blog-details-two-header">
 
                                 
-                                <h2 class="blog-details-two-post-title">IMAGE ICI</h2>
-                                <h2 class="blog-details-two-post-title">MEDIAS EN DESSOUS</h2>
+                                <h2 class="blog-details-two-post-title">
+                                {% for image in figures.linkedFigureImages %}
+                                    {% if image.mainImage == true %}
+                                    <img src=" {{ image.imageUrl }} " alt="">
+                                    {% endif %}
+                                {% endfor  %}
+                                </h2>
+
+
+
+                                <div class="container text-center my-3">
+                                    <div class="row mx-auto my-auto justify-content-center">
+                                        <div id="recipeCarousel" class="carousel slide" data-bs-ride="carousel">
+                                            <div class="carousel-inner" role="listbox">
+                                                {% for image in figures.linkedFigureImages %}
+                                                <div class="carousel-item active">
+                                                    <div class="col-md-3">
+                                                        <div class="card">
+                                                            <div class="card-img">
+                                                                <img src="{{ image.imageUrl }}" class="img-fluid">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {% endfor  %}
+                                            </div>
+                                            <a class="carousel-control-prev bg-transparent w-aut" href="#recipeCarousel" role="button" data-bs-slide="prev">
+                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            </a>
+                                            <a class="carousel-control-next bg-transparent w-aut" href="#recipeCarousel" role="button" data-bs-slide="next">
+                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            </a>
+                                        </div>
+                                    </div>		
+                                </div>
+
+
+                                <div class="container text-center my-3">
+                                    <div class="row mx-auto my-auto justify-content-center">
+                                        <div id="recipeCarouselVideo" class="carousel slide" data-bs-ride="carousel">
+                                            <div class="carousel-inner" role="listbox">
+                                                {% for video in figures.linkedFigureVideos %}
+                                                <div class="carousel-item active">
+                                                    <div class="col-md-3">
+                                                        <div class="card">
+                                                            <div class="card-img">
+                                                                <img src="{{ video.videoUrl }}" class="img-fluid">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {% endfor  %}
+                                            </div>
+                                            <a class="carousel-control-prev bg-transparent w-aut" href="#recipeCarouselVideo" role="button" data-bs-slide="prev">
+                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            </a>
+                                            <a class="carousel-control-next bg-transparent w-aut" href="#recipeCarouselVideo" role="button" data-bs-slide="next">
+                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            </a>
+                                        </div>
+                                    </div>		
+                                </div>
 
                                 <div class="blog-details-two-tags">
                                     <a href="#" class="btn-large wordpress">{{ figures.figGroup.name }}</a>
@@ -41,7 +101,7 @@
             <!-- Comment Area Start -->
             <div class="comment-area section-space--pt_60 section-space--pb_100">
                 <div class="container">
-
+                {{ form_start(formComment) }}
                     <div class="row">
                         <div class="col-lg-10 m-auto">
                             <div class="section-title">
@@ -51,7 +111,7 @@
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <div class="single-input">
-                                            <textarea placeholder="Message"></textarea>
+                                            {{ form_row(formComment.content) }}
                                         </div>
                                     </div>
                                     <div class="col-lg-12">
@@ -62,6 +122,7 @@
                                 </div>
                             </form>
                         </div>
+                    {{ form_end(formComment) }}
                     </div>
 
 
@@ -77,7 +138,7 @@
                                         <div class="comment-2">
                                             <div class="comment-author-info">
                                                 <div class="comment-author vcard">
-                                                    <img alt="" src="{{ comment.author.profilImage }}">
+                                                    <img alt="" src="{{ comment.author.profilImage }}" style="width: 40px;">
                                                 </div>
                                                 <div class="comment-content">
                                                     <div class="meta">
@@ -87,7 +148,6 @@
                                                                     <span class="time"> {{ comment.createdAt|date('d-m-Y') }} </span>
                                                             </div>
                                                         </div>
-                                                        <a class="comment-reply-link" href="#"><i class="icofont-reply"></i> Reply</a>
                                                     </div>
                                                 </div>
                                             </div>

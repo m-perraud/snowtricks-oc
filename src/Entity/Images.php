@@ -19,7 +19,7 @@ class Images
     #[ORM\Column]
     private ?bool $mainImage = null;
 
-    #[ORM\ManyToOne(inversedBy: 'LinkedFigureImages')]
+    #[ORM\ManyToOne(inversedBy: 'LinkedFigureImages', cascade: ['persist'] )]
     #[ORM\JoinColumn(nullable: false)]
     private ?Figure $linkedFigure = null;
 

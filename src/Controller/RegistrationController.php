@@ -27,7 +27,8 @@ class RegistrationController extends AbstractController
                 $userPasswordHasher->hashPassword(
                     $user,
                     $form->get('plainPassword')->getData()
-                )
+                ),
+            $user->setProfilImage('/images/author/new-user.png')
             );
 
             $entityManager->persist($user);

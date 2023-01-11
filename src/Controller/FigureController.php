@@ -11,10 +11,10 @@ use App\Form\CommentType;
 use App\Repository\FigureRepository;
 use App\Repository\ImagesRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Faker\Provider\Image;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -37,9 +37,6 @@ class FigureController extends AbstractController
             // Avec le $this->getUser() on a directement le user connecté 
             $comment->setAuthor($this->getUser());
 
-        // Pas nécessaire :
-        // $figure = $form->getData();
-
         $manager->persist($comment);
         $manager->flush();
 
@@ -56,7 +53,7 @@ class FigureController extends AbstractController
 
     #[Route('/figurenew', name: 'figure_new')]
     #[Route('/figure/{id}/edit', name: 'figure_mods')]
-    public function figureNew(Figure $figure = null, Request $request): Response
+    public function figureNew(Figure $figure = null, Request $request, EntityManagerInterface $manager): Response
     {
         if(!$figure){
             $figure = new Figure();
@@ -75,31 +72,30 @@ class FigureController extends AbstractController
 
             $images = $form->get('images')->getData();
 
-            // Il faudra vérifier si on a déjà une main ou pas. 
+            // Il faudra vérifier si on a déjà une main ou pas.
+            
             $haveMainImage = false;
 
             foreach($images as $image){
-
-                /*
-                if(!$haveMainImage){
-                    $image->setMainImage(true);
-                    $haveMainImage= true;
-                }
-                */
-
                 $file = md5(uniqid()).'.'.$image->guessExtension();
                 $image->move(
                     $this->getParameter('images_directory'),
                     $file
                 );
                 $img = new Images();
+
+                if(!$haveMainImage){
+                    $img->setMainImage(true);
+                    $haveMainImage = true;
+                }
+
                 $img->setImageURL($file);
-                $figure->addLinkedFigureImage($img);
+                $img->setLinkedFigure($figure);
+                $manager->persist($img);
             }
 
             $figure->setSlug($slugger->slug($figure->getTitle()));
-            // Pas nécessaire :
-            // $figure = $form->getData();
+            $manager->flush();
 
             return $this->redirectToRoute('figure_details', ['slug' => $figure->getSlug()]);
         }
