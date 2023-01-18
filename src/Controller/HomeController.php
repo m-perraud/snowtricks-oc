@@ -3,18 +3,22 @@
 namespace App\Controller;
 
 use App\Entity\Figure;
+use App\Repository\FigureRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(ManagerRegistry $doctrine): Response
+    public function index(ManagerRegistry $doctrine, Request $request, FigureRepository $repo): Response
     {
-        $figures = $doctrine->getRepository(Figure::class)->findAll();
+        //$figures = $doctrine->getRepository(Figure::class)->findAll();
+
+        $figures = $repo->findFiguresPaginated(1, 6);
 
         return $this->render('home/home.html.twig', [
             'controller_name' => 'HomeController',
@@ -55,13 +59,16 @@ class HomeController extends AbstractController
     }
 
     #[Route('/pagination', name: 'app_pagination')]
-    public function pagination(ManagerRegistry $doctrine): Response
+    public function pagination(Request $request, FigureRepository $repo): Response
     {
-        $figures = $doctrine->getRepository(Figure::class)->findAll();
+        //$figures = $doctrine->getRepository(Figure::class)->findAll();
+        $page = $request->query->getInt('page', 1);
+
+        $figures = $repo->findFiguresPaginated($page, 6);
 
         return $this->render('home/pagination.html.twig', [
             'controller_name' => 'HomeController',
-            'figures' => $figures
+            'figures' => $figures 
         ]);
     }
 } 

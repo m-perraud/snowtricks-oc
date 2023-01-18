@@ -89,9 +89,15 @@
                                 <li>
                                     <a href="{{ path('app_register') }}"><span>Inscription</span></a>
                                 </li>
+                                    {% if app.user %}
+                                        <a href="{{ path('app_logout') }}" class="sign-up-action-button btn-medium btn">
+                                            Déconnexion
+                                        </a>
+                                    {% else %}
                                 <a href="{{ path('app_login') }}" class="sign-up-action-button btn-medium btn">
-                            Connexion
-                        </a>
+                                    Connexion
+                                </a>
+                                {% endif %}
                             </ul>
                         </nav>
                         
