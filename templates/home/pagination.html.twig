@@ -16,8 +16,10 @@
                                     <div class="team-share-top">
                                         <a href="{{ path('figure_details', {'slug': figure.slug } ) }}" class="shate-action-button"><i class="icofont-eye-alt"></i></a>
                                         <ul class="team-social-share">
-                                            <li><a href="{{ path('figure_mods', {'id': figure.id } ) }}"><i class="icofont-edit"></i></a></li>
-                                            <li><a href="#"><i class="icofont-ui-delete"></i></a></li>
+                                            {% if app.user %}
+                                                <li><a href="{{ path('figure_mods', {'id': figure.id } ) }}"><i class="icofont-edit"></i></a></li>
+                                                <li><a href="#"><i class="icofont-ui-delete"></i></a></li>
+                                            {% endif %}
                                         </ul>
                                     </div>
                                     <div class="team-member-info">
