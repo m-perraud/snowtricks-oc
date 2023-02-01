@@ -35,8 +35,6 @@ class RegistrationController extends AbstractController
             $user->setIsVerified(false)
             );
 
-            //dd($user);
-
             $entityManager->persist($user);
             $entityManager->flush();
 
@@ -138,7 +136,7 @@ class RegistrationController extends AbstractController
             compact('user', 'token')
         );
 
-        $this->addFlash('success', 'Email de vérification');
+        $this->addFlash('success', 'Email de vérification envoyé');
 
         return $this->redirectToRoute('app_home');
 
