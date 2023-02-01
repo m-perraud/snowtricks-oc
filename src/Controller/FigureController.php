@@ -55,6 +55,8 @@ class FigureController extends AbstractController
     #[Route('/figure/{id}/edit', name: 'figure_mods')]
     public function figureNew(Figure $figure = null, Request $request, EntityManagerInterface $manager): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
         if(!$figure){
             $figure = new Figure();
         }
