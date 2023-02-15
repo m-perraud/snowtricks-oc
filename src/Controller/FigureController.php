@@ -10,6 +10,7 @@ use App\Form\FigureType;
 use App\Form\CommentType;
 use App\Repository\FigureRepository;
 use App\Repository\ImagesRepository;
+use App\Service\VideoProcessingService;
 use Doctrine\ORM\EntityManagerInterface;
 use Faker\Provider\Image;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,7 +54,7 @@ class FigureController extends AbstractController
 
     #[Route('/figurenew', name: 'figure_new')]
     #[Route('/figure/{id}/edit', name: 'figure_mods')]
-    public function figureNew(Figure $figure = null, Request $request, EntityManagerInterface $manager): Response
+    public function figureNew(Figure $figure = null, Request $request, EntityManagerInterface $manager, VideoProcessingService $videoProc): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         
@@ -72,10 +73,13 @@ class FigureController extends AbstractController
                 $figure->setUpdatedAt(new \DateTimeImmutable());
             }
 
-            $images = $form->get('images')->getData();
+            dd($figure->getLinkedFigureImages());
 
-            // Il faudra vérifier si on a déjà une main ou pas.
-            
+            $images = $form->get('images')->getData();
+            $videos = $form->get('videos')->getData();
+            $videos = explode(',', $videos);
+
+
             $haveMainImage = false;
 
             foreach($images as $image){
@@ -96,8 +100,19 @@ class FigureController extends AbstractController
                 $manager->persist($img);
             }
 
+            foreach($videos as $video){
+                $videoURL = $videoProc->cleanURL($video);
+
+                $vid = new Videos();
+                $vid->setVideoURL($videoURL);
+                $vid->setLinkedFigure($figure);
+                $manager->persist($vid);
+            }
+
             $figure->setSlug($slugger->slug($figure->getTitle()));
+
             $manager->flush();
+
 
             return $this->redirectToRoute('figure_details', ['slug' => $figure->getSlug()]);
         }

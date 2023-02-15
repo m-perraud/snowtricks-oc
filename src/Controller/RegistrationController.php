@@ -32,7 +32,8 @@ class RegistrationController extends AbstractController
                     $form->get('plainPassword')->getData()
                 ),
             $user->setProfilImage('/images/author/new-user.png'),
-            $user->setIsVerified(false)
+            $user->setIsVerified(false),
+            $user->setResetToken('')
             );
 
             $entityManager->persist($user);
@@ -99,9 +100,11 @@ class RegistrationController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
+    
     #[Route('/resendmail', name: 'resend_mail')]
     public function resendVerif(JWTService $jwt, SendMailService $mail, UserRepository $userRepo): Response
     {
+        /** @var User $user */
         $user = $this->getUser();
 
         if(!$user){

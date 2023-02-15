@@ -24,7 +24,6 @@
             {% else %}
             {#Attention, si on est pas en form ça ne fonctionnera pas #}
             <form action="{{ path('delete_img', {id: image.id})}}" method="post">
-            {# the argument of csrf_token() is an arbitrary string used to generate the token #}
             <input type="hidden" name="token" value="{{ csrf_token('delete') }}"/>
             <button type="submit">Supprimer</button>
             {% endif %}
@@ -33,6 +32,16 @@
             </div>
         {% endfor %}
     {% endif %}
+
+    {% for video in figure.linkedFigureVideos %}
+            <div>
+            {#Attention, si on est pas en form ça ne fonctionnera pas #}
+            <form action="{{ path('delete_vid', {id: video.id})}}" method="post">
+            <input type="hidden" name="token" value="{{ csrf_token('delete') }}"/>
+            <button type="submit">Supprimer</button>
+            </form>
+            </div>
+        {% endfor %}
 
     <button type="submit" class="btn btn-warning"> 
         {% if editMode %}
