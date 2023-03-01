@@ -58,10 +58,6 @@
 
 
 
-<body class="theme-color-two">
-
-
-
 
 <!--========  header area =========-->
     <header class="header header-three">
@@ -89,14 +85,15 @@
                                             <a href="{{ path('figure_new') }}"><span>Créer une figure</span></a>
                                         </li>
                                     {% endif %}
-                                <li>
-                                    <a href="{{ path('app_register') }}"><span>Inscription</span></a>
-                                </li>
+                                
                                     {% if app.user %}
                                         <a href="{{ path('app_logout') }}" class="sign-up-action-button btn-medium btn">
                                             Déconnexion
                                         </a>
                                     {% else %}
+                                    <li>
+                                    <a href="{{ path('app_register') }}"><span>Inscription</span></a>
+                                </li>
                                 <a href="{{ path('app_login') }}" class="sign-up-action-button btn-medium btn">
                                     Connexion
                                 </a>
@@ -240,6 +237,8 @@
 
     <!-- Main JS -->
     <script src="/js/main.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
 
 </body>

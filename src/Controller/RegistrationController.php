@@ -25,7 +25,6 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
@@ -40,7 +39,6 @@ class RegistrationController extends AbstractController
             $entityManager->flush();
 
             // On va générer le JWT : On crée le header, payload puis on génère le token
-
             $header = [
                 'typ' => 'JWT',
                 'alg' => 'HS256'
@@ -130,7 +128,6 @@ class RegistrationController extends AbstractController
 
         $token = $jwt->generate($header, $payload, $this->getParameter('app.jwtsecret'));
 
-        // On envoie un mail
         $mail->send(
             'no-reply@monsite.net',
             $user->getUserMail(),

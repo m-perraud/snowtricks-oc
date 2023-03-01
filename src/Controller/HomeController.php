@@ -16,8 +16,6 @@ class HomeController extends AbstractController
     #[Route('/', name: 'app_home')]
     public function index(ManagerRegistry $doctrine, Request $request, FigureRepository $repo): Response
     {
-        //$figures = $doctrine->getRepository(Figure::class)->findAll();
-
         $figures = $repo->findFiguresPaginated(1, 6);
 
         return $this->render('home/home.html.twig', [
@@ -61,7 +59,6 @@ class HomeController extends AbstractController
     #[Route('/pagination', name: 'app_pagination')]
     public function pagination(Request $request, FigureRepository $repo): Response
     {
-        //$figures = $doctrine->getRepository(Figure::class)->findAll();
         $page = $request->query->getInt('page', 1);
 
         $figures = $repo->findFiguresPaginated($page, 6);

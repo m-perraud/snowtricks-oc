@@ -139,4 +139,17 @@ class FigureController extends AbstractController
             return $this->redirectToRoute('figure_mods', ['id' => $image->getLinkedFigure()->getId()]);
     }
 
+    #[Route('/deletefig/{id}', name: 'delete_fig')]
+    public function deleteFigure(EntityManagerInterface $doctrine, Figure $figure, Request $request){
+
+        //$csrfToken = $request->request->get('token');
+
+        //if($this->isCsrfTokenValid('delete', $csrfToken)){
+            //$doctrine->remove($image);
+            //$doctrine->flush();
+        //}
+
+            return $this->redirectToRoute('app_home');
+    }
+
 }

@@ -5,15 +5,26 @@
 {% block body %}
 
 
+    <div id="main-wrapper">
+        <div class="site-wrapper-reveal">
+
+            <div class="login-register-page-area section-space--ptb_80">
+                <div class="container">
+                    <div class="row ">
+                        <div class="col-lg-6 m-auto">
+                            <div class="login-content">
+
+                                <div class="login-header mb-40">
+                                    <h5>Créer un nouvel article</h5>
+                                </div>
+
+{% if app.request.attributes.get('_route') == 'figure_mods' %}
 {{ form_start(formFigure) }}
 
 {{ form_row(formFigure.title) }}
 {{ form_row(formFigure.content) }}
 
 
-
-
-{% if app.request.attributes.get('_route') == 'figure_mods' %}
 <h2>Images</h2>
         {% for image in figure.linkedFigureImages %}
             <div>
@@ -43,6 +54,10 @@
             </div>
         {% endfor %}
 
+
+{{ form_errors(formFigure.title) }}
+</div>
+
     <button type="submit" class="btn btn-warning"> 
         {% if editMode %}
             Enregistrer les modifications
@@ -51,9 +66,19 @@
         {% endif %}
     </button>
 
-{{ form_errors(formFigure.title) }}
-</div>
-
 {{ form_end(formFigure) }}
+
+
+                            </div>
+
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
 
 {% endblock %}

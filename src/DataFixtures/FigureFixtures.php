@@ -12,9 +12,15 @@ use App\Entity\Comment;
 use App\Entity\FigGroup;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class FigureFixtures extends Fixture
 {
+
+    public function __construct(private UserPasswordHasherInterface $userPasswordHasher)
+    {}
+
+
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create();
@@ -49,7 +55,7 @@ class FigureFixtures extends Fixture
 
                     $img = new Images();
                     $img->setLinkedFigure($figure)
-                        ->setImageURL($faker->imageUrl(100, 100))
+                        ->setImageURL('/images/figures/fixture.jpg')
                         ->setMainImage($j === 1);
                     $manager->persist($img);
 
@@ -59,9 +65,11 @@ class FigureFixtures extends Fixture
                 for ($k = 1; $k <= 2; $k++) {
                     $user = new User();
                     $user->setUsername($faker->userName())
-                            ->setPassword($faker->password())
+                            ->setPassword($this->userPasswordHasher->hashPassword($user, 'DataFixturesPass'))
                             ->setProfilImage($faker->imageUrl(50, 50))
-                            ->setUserMail($faker->email());
+                            ->setUserMail($faker->email())
+                            ->setIsVerified('0')
+                            ->setResetToken('');
                     $manager->persist($user);
 
                     $manager->flush();
