@@ -36,21 +36,23 @@
 
 								<div class="carousel-inner" role="listbox">
 									{% for image in figures.linkedFigureImages %}
-										<div class="carousel-item active">
-											<div class="col-md-3">
-												<div class="card">
-													<div class="card-img">
-														<img src="{{ image.imageUrl }}" class="img-fluid">
-														{% if app.user %}
-															<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-{{ image.id }}">
-																<i class="icofont-ui-delete"></i>
-															</button>
-															{% include '_delete_modal.html.twig' with { 'btn_label': 'Supprimer l\'image', 'btn_url': path('delete_img', {'id': image.id }), 'modalId': image.id } %}
+										{% if image.mainImage == false %}
+											<div class="carousel-item active">
+												<div class="col-md-3">
+													<div class="card">
+														<div class="card-img">
+															<img src="{{ image.imageUrl }}" class="img-fluid">
+															{% if app.user %}
+																<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-{{ image.id }}">
+																	<i class="icofont-ui-delete"></i>
+																</button>
+																{% include '_delete_modal.html.twig' with { 'btn_label': 'Supprimer l\'image', 'btn_url': path('delete_img', {'id': image.id }), 'modalId': image.id } %}
 																{% endif %}
 															</div>
 														</div>
 													</div>
 												</div>
+												{% endif %}
 												{% endfor  %}
 											</div>
 									

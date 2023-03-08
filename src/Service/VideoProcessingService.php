@@ -2,14 +2,12 @@
 
 namespace App\Service;
 
-
-
 class VideoProcessingService
 {
-    // D'abord on aura vérifié la validité de l'URL : seulement du youtube, vimeo et daylimotion. 
-    // Attention, plusieurs formats d'URL possibles. Ensuite le form envoie l'URL en DB. 
+    // D'abord on aura vérifié la validité de l'URL : seulement du youtube, vimeo et daylimotion.
+    // Attention, plusieurs formats d'URL possibles. Ensuite le form envoie l'URL en DB.
 
-    // Ici on va extraire la variable pour chaque type de vidéo et chaque URL 
+    // Ici on va extraire la variable pour chaque type de vidéo et chaque URL
 
     public function cleanURL(string $videoURL): string
     {
@@ -27,5 +25,5 @@ class VideoProcessingService
         return $videoURL;
     }
 
-    // Pour la partie iframe, passer le html sur twig directement  
+    // Pour la partie iframe, passer le html sur twig directement
 }

@@ -19,8 +19,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class FigureController extends AbstractController
 {
-
-
     #[Route('/figure/{slug}', name: 'figure_details')]
     public function figureDetails(FigureRepository $repo, string $slug, Request $request, EntityManagerInterface $manager): Response
     {
@@ -85,12 +83,13 @@ class FigureController extends AbstractController
                 );
                 $img = new Images();
 
+                $img->setMainImage(false);
+
                 if (!$haveMainImage) {
                     $img->setMainImage(true);
                     $haveMainImage = true;
                 }
 
-                $img->setMainImage(false);
                 $img->setImageURL('/images/figures/' . $file);
                 $img->setLinkedFigure($figure);
                 $manager->persist($img);
@@ -125,7 +124,6 @@ class FigureController extends AbstractController
     #[Route('/deleteimg/{id}', name: 'delete_img')]
     public function deleteImage(EntityManagerInterface $doctrine, Images $image, Request $request)
     {
-
         $csrfToken = $request->request->get('token');
 
         if ($this->isCsrfTokenValid('delete', $csrfToken)) {
@@ -137,9 +135,8 @@ class FigureController extends AbstractController
     }
 
     #[Route('/deletefig/{id}', name: 'delete_fig')]
-    public function deleteFigure(EntityManagerInterface $doctrine, Figure $figure, Request $request, int $id)
+    public function deleteFigure(EntityManagerInterface $doctrine, Figure $figure)
     {
-
         $doctrine->remove($figure);
         $doctrine->flush();
 
@@ -147,12 +144,11 @@ class FigureController extends AbstractController
     }
 
     #[Route('/deletevid/{id}', methods: ['GET', 'DELETE'], name: 'delete_vid')]
-    public function deleteVideo(EntityManagerInterface $doctrine, Videos $video, Request $request, int $id): Response
+    public function deleteVideo(EntityManagerInterface $doctrine, Videos $video): Response
     {
-
         $doctrine->remove($video);
         $doctrine->flush();
 
-        return $this->redirectToRoute('figure_details', ['slug' => $figure->getSlug()]);
+        return $this->redirectToRoute('figure_details', ['slug' => $video->getLinkedFigure()->getSlug()]);
     }
 }

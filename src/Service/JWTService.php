@@ -6,7 +6,6 @@ use DateTimeImmutable;
 
 class JWTService
 {
-
     /**
      * Génératrion du JWT ( Json Web Token )
      *
@@ -19,7 +18,6 @@ class JWTService
 
     public function generate(array $header, array $payload, string $secret, int $validity = 10800): string
     {
-
         if ($validity > 0) {
             $now = new DateTimeImmutable();
             $exp = $now->getTimestamp() + $validity;
@@ -40,7 +38,7 @@ class JWTService
         $base64Header = str_replace(['+', '/', '='], ['-', '_', ''], $base64Header);
         $base64Payload = str_replace(['+', '/', '='], ['-', '_', ''], $base64Payload);
 
-        // On génère la signature 
+        // On génère la signature
 
         $secret = base64_encode($secret);
         $signature = hash_hmac('sha256', $base64Header . '.' . $base64Payload, $secret, true);

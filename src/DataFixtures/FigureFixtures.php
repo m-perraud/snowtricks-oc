@@ -16,7 +16,6 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class FigureFixtures extends Fixture
 {
-
     public function __construct(private UserPasswordHasherInterface $userPasswordHasher)
     {
     }

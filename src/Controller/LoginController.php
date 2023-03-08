@@ -58,10 +58,10 @@ class LoginController extends AbstractController
                 // On génère un lien de réinitialisation du mdp
                 $url = $this->generateUrl('reset_pass', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
 
-                // On crée les données du mail 
+                // On crée les données du mail
                 $context = compact('url', 'user');
 
-                // On envoie le mail 
+                // On envoie le mail
                 $mail->send(
                     'no-reply@snowtricks.fr',
                     $user->getUserMail(),
@@ -95,7 +95,7 @@ class LoginController extends AbstractController
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                // On efface le token 
+                // On efface le token
                 $user->setResetToken('');
                 $user->setPassword(
                     $passwordHasher->hashPassword(
