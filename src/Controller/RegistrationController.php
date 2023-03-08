@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RegistrationController extends AbstractController
 {
@@ -30,9 +29,9 @@ class RegistrationController extends AbstractController
                     $user,
                     $form->get('plainPassword')->getData()
                 ),
-            $user->setProfilImage('/images/author/new-user.png'),
-            $user->setIsVerified(false),
-            $user->setResetToken('')
+                $user->setProfilImage('/images/author/new-user.png'),
+                $user->setIsVerified(false),
+                $user->setResetToken('')
             );
 
             $entityManager->persist($user);
@@ -45,7 +44,7 @@ class RegistrationController extends AbstractController
             ];
 
             $payload = [
-                'user_id' =>$user->getId()
+                'user_id' => $user->getId()
             ];
 
             $token = $jwt->generate($header, $payload, $this->getParameter('app.jwtsecret'));
@@ -74,14 +73,12 @@ class RegistrationController extends AbstractController
     {
         // On vérifie si le token est valide, n'a pas expiré, et n'a pas été modifié
 
-        if($jwt->isValid($token) && !$jwt->isExpired($token) && $jwt->check($token, $this->getParameter('app.jwtsecret')))
-        {
+        if ($jwt->isValid($token) && !$jwt->isExpired($token) && $jwt->check($token, $this->getParameter('app.jwtsecret'))) {
             $payload = $jwt->getPayload($token);
             $user = $userRepo->find($payload['user_id']);
 
             // On vérifie si le user existe et n'a pas encore activé son compte
-            if($user && !$user->isIsVerified())
-            {
+            if ($user && !$user->isIsVerified()) {
                 $user->setIsVerified(true);
 
                 $manager->flush($user);
@@ -89,7 +86,6 @@ class RegistrationController extends AbstractController
                 $this->addFlash('success', 'Utilisateur activé.');
 
                 return $this->redirectToRoute('app_home');
-
             }
         }
 
@@ -98,20 +94,20 @@ class RegistrationController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
-    
+
     #[Route('/resendmail', name: 'resend_mail')]
     public function resendVerif(JWTService $jwt, SendMailService $mail, UserRepository $userRepo): Response
     {
         /** @var User $user */
         $user = $this->getUser();
 
-        if(!$user){
+        if (!$user) {
             $this->addFlash('warning', 'Vous devez être connecté pour accéder à cette page');
 
             return $this->redirectToRoute('app_home');
         }
 
-        if($user->isIsVerified()){
+        if ($user->isIsVerified()) {
             $this->addFlash('warning', 'Cet utilisateur est déjà activé');
 
             return $this->redirectToRoute('app_home');
@@ -123,7 +119,7 @@ class RegistrationController extends AbstractController
         ];
 
         $payload = [
-            'user_id' =>$user->getId()
+            'user_id' => $user->getId()
         ];
 
         $token = $jwt->generate($header, $payload, $this->getParameter('app.jwtsecret'));
@@ -139,7 +135,5 @@ class RegistrationController extends AbstractController
         $this->addFlash('success', 'Email de vérification envoyé');
 
         return $this->redirectToRoute('app_home');
-
     }
-
 }

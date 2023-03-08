@@ -4,151 +4,204 @@
 {% block body %}
 
 
-            <div class="blog-details-two-wrapper">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12">
-                            <div class="blog-details-two-header">
+{% if app.user %}
+	<a href="{{ path('figure_mods', {'id': figures.id } ) }}">
+		<i class="icofont-edit"></i>
+	</a>
+	<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-{{ figures.id }}">
+		<i class="icofont-ui-delete"></i>
+	</button>
+	{% include '_delete_modal.html.twig' with { 'btn_label': 'Supprimer la figure', 'btn_url': path('delete_fig', {'id': figures.id }), 'modalId': figures.id } %}
+{% endif %}
 
-                                
-                                <h2 class="blog-details-two-post-title">
-                                {% for image in figures.linkedFigureImages %}
-                                    {% if image.mainImage == true %}
-                                    <img src=" /uploads/{{ image.imageUrl }} " alt="">
-                                    {% endif %}
-                                {% endfor  %}
-                                </h2>
+<div class="blog-details-two-wrapper">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12 col-md-12">
+				<div class="blog-details-two-header">
 
 
-                                <div class="container text-center my-3">
-                                    <div class="row mx-auto my-auto justify-content-center">
-                                        <div id="recipeCarousel" class="carousel slide" data-bs-ride="carousel">
-                                            <div class="carousel-inner" role="listbox">
-                                                {% for image in figures.linkedFigureImages %}
-                                                <div class="carousel-item active">
-                                                    <div class="col-md-3">
-                                                        <div class="card">
-                                                            <div class="card-img">
-                                                                <img src=" /uploads/{{ image.imageUrl }}" class="img-fluid">
+					<h2 class="blog-details-two-post-title">
+						{% for image in figures.linkedFigureImages %}
+							{% if image.mainImage == true %}
+								<img src="{{ image.imageUrl }}" alt="">
+							{% endif %}
+						{% endfor  %}
+					</h2>
+
+
+					<div class="container text-center my-3">
+						<div class="row mx-auto my-auto justify-content-center">
+							<div id="recipeCarousel" class="carousel slide" data-bs-ride="carousel">
+
+								<div class="carousel-inner" role="listbox">
+									{% for image in figures.linkedFigureImages %}
+										<div class="carousel-item active">
+											<div class="col-md-3">
+												<div class="card">
+													<div class="card-img">
+														<img src="{{ image.imageUrl }}" class="img-fluid">
+														{% if app.user %}
+															<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-{{ image.id }}">
+																<i class="icofont-ui-delete"></i>
+															</button>
+															{% include '_delete_modal.html.twig' with { 'btn_label': 'Supprimer l\'image', 'btn_url': path('delete_img', {'id': image.id }), 'modalId': image.id } %}
+																{% endif %}
+															</div>
+														</div>
+													</div>
+												</div>
+												{% endfor  %}
+											</div>
+									
+									<a class="carousel-control-prev bg-transparent w-aut" href="#recipeCarousel" role="button" data-bs-slide="prev">
+										<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+									</a>
+									<a class="carousel-control-next bg-transparent w-aut" href="#recipeCarousel" role="button" data-bs-slide="next">
+										<span class="carousel-control-next-icon" aria-hidden="true"></span>
+									</a>
+								</div>
+							</div>
+						</div>
+
+						<div class="gallery-container section-container">
+							<div class="container">
+								<div class="row">
+									<div class="col gallery section-description wow fadeIn">
+										<div class="divider-1 wow fadeInUp">
+											<span></span>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col">
+										<div class="row">
+											{% for video in figures.linkedFigureVideos %}
+												<div class="col-md-6 gallery-box wow fadeInUp">
+													<iframe width="350" height="220" src=" {{ video.videoURL }} " frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                                                {% if app.user %}
+													<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-{{ video.id }}">
+													<i class="icofont-ui-delete"></i>
+													</button>
+														{% include '_delete_modal.html.twig' with { 'btn_label': 'Supprimer la vidéo', 'btn_url': path('delete_vid', {'id': video.id }), 'modalId': video.id } %}
+															{% endif %}
                                                             </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                {% endfor  %}
-                                            </div>
-                                            <a class="carousel-control-prev bg-transparent w-aut" href="#recipeCarousel" role="button" data-bs-slide="prev">
-                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                            </a>
-                                            <a class="carousel-control-next bg-transparent w-aut" href="#recipeCarousel" role="button" data-bs-slide="next">
-                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                            </a>
-                                        </div>
-                                    </div>		
-                                </div>
-
-                                <div class="container" style="display:flex, flex-direction:row;">
-                                    <div class="col-md-3">
-                                        {% for video in figures.linkedFigureVideos %}
-                                            <iframe width="350" height="220" src=" {{ video.videoURL }} " frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                                        {% endfor  %}
-                                    </div>
-                                </div>
-
-                                <div class="blog-details-two-tags">
-                                    <a href="#" class="btn-large wordpress">{{ figures.figGroup.name }}</a>
-                                    <a href="#" class="btn-large woocommerce">Créée le {{ figures.createdAt|date('d-m-Y') }}</a>
-                                    <a href="#" class="btn-large magento">Modifiée le {{ figures.updatedAt|date('d-m-Y') }}</a>
-                                </div>
-
-                            </div>
-                            <div class="blog-details-post-image mt-5  mb-5">
-                                <img src="assets/images/blog/blog-details-2.jpg" alt="">
-                            </div>
-
-                            <div class="blog-details-two-post-text section-space--pb_80">
-                                <div class="col-lg-10 m-auto">
-                                    <h3 class="mb-5 title">{{ figures.title }}</h3>
-                                    {{ figures.content|raw }}
-
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
+														{% endfor  %}
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
 
 
-            <!-- Comment Area Start -->
-            <div class="comment-area section-space--pt_60 section-space--pb_100">
-                <div class="container">
-                {{ form_start(formComment) }}
-                    {% if app.user %}
-                        <div class="row">
-                            <div class="col-lg-10 m-auto">
-                                <div class="section-title">
-                                    <h3 class="title">Leave a comment</h3>
-                                </div>
-                                <form action="#" class="comment-form-area">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <div class="single-input">
-                                                {{ form_row(formComment.content) }}
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-12">
-                                            <div class="submit-button text-center">
-                                                <button class="btn-large btn-bg-6 btn-primary" type="submit"> Submit Now <i class="icofont-long-arrow-right"></i></button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        {{ form_end(formComment) }}
-                        </div>
-                    {% endif %}
-            
+									<div class="container" style="display:flex, flex-direction:row;">
 
-                    <div class="row">
-                        <div class="col-lg-10 m-auto">
-                            <div class="comment-list-wrapper">
-                                
+										<div class="col-md-3"></div>
 
-                                <h3 class="widget-title mb-30">Comments</h3>
-                                {% for comment in figures.linkedFigure %}
-                                <ol class="comment-list">
-                                    <li class="comment">
-                                        <div class="comment-2">
-                                            <div class="comment-author-info">
-                                                <div class="comment-author vcard">
-                                                    <img alt="" src="{{ comment.author.profilImage }}" style="width: 40px;">
-                                                </div>
-                                                <div class="comment-content">
-                                                    <div class="meta">
-                                                        <div class="comment-content-top">
-                                                            <div class="comment-actions">
-                                                                <h6 class="fn">{{ comment.author.username }}</h6>
-                                                                    <span class="time"> {{ comment.createdAt|date('d-m-Y') }} </span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="comment-text">
-                                                <p>{{ comment.content }}</p>
-                                            </div>
-                                        </div>
-                                        {% endfor  %}
-                                    </li><!-- comment End-->
-                                </ol>
-                            </div>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Comment Area End -->
+									</div>
+
+									<div class="blog-details-two-tags">
+										<a href="#" class="btn-large wordpress">{{ figures.figGroup.name }}</a>
+										<a href="#" class="btn-large woocommerce">Créée le
+											{{ figures.createdAt|date('d-m-Y') }}</a>
+										<a href="#" class="btn-large magento">Modifiée le
+											{{ figures.updatedAt|date('d-m-Y') }}</a>
+									</div>
+
+								</div>
+								<div class="blog-details-post-image mt-5  mb-5">
+									<img src="assets/images/blog/blog-details-2.jpg" alt="">
+								</div>
+
+								<div class="blog-details-two-post-text section-space--pb_80">
+									<div class="col-lg-10 m-auto">
+										<h3 class="mb-5 title">{{ figures.title }}</h3>
+										{{ figures.content|raw }}
+
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
 
 
+				<!-- Comment Area Start -->
+				<div class="comment-area section-space--pt_60 section-space--pb_100">
+					<div class="container">
+						{{ form_start(formComment) }}
+						{% if app.user %}
+							<div class="row">
+								<div class="col-lg-10 m-auto">
+									<div class="section-title">
+										<h3 class="title">Leave a comment</h3>
+									</div>
+									<form action="#" class="comment-form-area">
+										<div class="row">
+											<div class="col-lg-12">
+												<div class="single-input">
+													{{ form_row(formComment.content) }}
+												</div>
+											</div>
+											<div class="col-lg-12">
+												<div class="submit-button text-center">
+													<button class="btn-large btn-bg-6 btn-primary" type="submit">
+														Submit Now
+														<i class="icofont-long-arrow-right"></i>
+													</button>
+												</div>
+											</div>
+										</div>
+									</form>
+								</div>
+								{{ form_end(formComment) }}
+							</div>
+						{% endif %}
 
-{% endblock %}
+
+						<div class="row">
+							<div class="col-lg-10 m-auto">
+								<div class="comment-list-wrapper">
+
+
+									<h3 class="widget-title mb-30">Comments</h3>
+									{% for comment in figures.linkedFigure %}
+										<ol class="comment-list">
+											<li class="comment">
+												<div class="comment-2">
+													<div class="comment-author-info">
+														<div class="comment-author vcard">
+															<img alt="" src="{{ comment.author.profilImage }}" style="width: 40px;">
+														</div>
+														<div class="comment-content">
+															<div class="meta">
+																<div class="comment-content-top">
+																	<div class="comment-actions">
+																		<h6 class="fn">{{ comment.author.username }}</h6>
+																		<span class="time">
+																			{{ comment.createdAt|date('d-m-Y') }}
+																		</span>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="comment-text">
+														<p>{{ comment.content }}</p>
+													</div>
+												</div>
+											{% endfor  %}
+										</li>
+										<!-- comment End-->
+									</ol>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Comment Area End -->
+
+
+			{% endblock %}

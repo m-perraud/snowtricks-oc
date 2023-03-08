@@ -21,13 +21,13 @@ class LoginController extends AbstractController
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        // get the login error if there is one
+        // Get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
-        // last username entered by the user
+        // Last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('login/index.html.twig', [
-            'last_username' => $lastUsername, 
+            'last_username' => $lastUsername,
             'error' => $error
         ]);
     }
@@ -45,10 +45,10 @@ class LoginController extends AbstractController
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             $user = $userRepo->findOneByUserMail($form->get('email')->getData());
 
-            if($user){
+            if ($user) {
                 //On génère un token de réinitialisation
                 $token = $tokenGenerator->generateToken();
                 $user->setResetToken($token);
@@ -57,7 +57,7 @@ class LoginController extends AbstractController
 
                 // On génère un lien de réinitialisation du mdp
                 $url = $this->generateUrl('reset_pass', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
-                
+
                 // On crée les données du mail 
                 $context = compact('url', 'user');
 
@@ -72,7 +72,6 @@ class LoginController extends AbstractController
 
                 $this->addFlash('success', 'Email envoyé avec succès');
                 return $this->redirectToRoute('app_login');
-
             }
             $this->addFlash('danger', 'Un problème est survenu');
             return $this->redirectToRoute('forgotten_pw');
@@ -90,26 +89,26 @@ class LoginController extends AbstractController
         // On vérifie si on a ce token dans la base de données
         $user = $userRepo->findOneByResetToken($token);
 
-        if($user){
+        if ($user) {
             $form = $this->createForm(ResetPasswordFormType::class);
 
             $form->handleRequest($request);
 
-            if($form->isSubmitted() && $form->isValid()){
+            if ($form->isSubmitted() && $form->isValid()) {
                 // On efface le token 
                 $user->setResetToken('');
                 $user->setPassword(
                     $passwordHasher->hashPassword(
-                        $user, 
+                        $user,
                         $form->get('password')->getData()
-                        )
-                    );
+                    )
+                );
 
-                    $manager->persist($user);
-                    $manager->flush();
+                $manager->persist($user);
+                $manager->flush();
 
-                    $this->addFlash('success', 'Mot de passe changé avec succès');
-                    return $this->redirectToRoute('app_login');
+                $this->addFlash('success', 'Mot de passe changé avec succès');
+                return $this->redirectToRoute('app_login');
             }
 
             return $this->render('login/reset_password.html.twig', [
@@ -120,6 +119,4 @@ class LoginController extends AbstractController
         $this->addFlash('danger', 'Token invalide');
         return $this->redirectToRoute('app_login');
     }
-
-
 }

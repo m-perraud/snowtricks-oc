@@ -2,47 +2,51 @@
 
 {% block body %}
 
-    <div id="main-wrapper">
-        <div class="site-wrapper-reveal">
+	<div id="main-wrapper">
+		<div class="site-wrapper-reveal">
 
-            <div class="login-register-page-area section-space--ptb_80">
-                <div class="container">
-                    <div class="row ">
-                        <div class="col-lg-6 m-auto">
-                            <div class="login-content">
+			<div class="login-register-page-area section-space--ptb_80">
+				<div class="container">
+					<div class="row ">
+						<div class="col-lg-6 m-auto">
+							<div class="login-content">
 
-                                <div class="login-header mb-40">
-                                    <h5>Inscription</h5>
-                                </div>
-    {{ form_start(registrationForm) }}
-                                <form action="{{ path('app_register') }}" method="post">
-                                        {{ form_row(registrationForm.userMail, {
+								<div class="login-header mb-40">
+									<h5>Inscription</h5>
+								</div>
+								{{ form_start(registrationForm) }}
+								<form action="{{ path('app_register') }}" method="post">
+									{{ form_row(registrationForm.userMail, {
                                             label: 'Email'
                                         }) }}
-                                        {{ form_row(registrationForm.username, {
+									{{ form_row(registrationForm.username, {
                                             label: 'Identifiant'
                                         }) }}
-                                        {{ form_row(registrationForm.plainPassword, {
+									{{ form_row(registrationForm.plainPassword, {
                                             label: 'Mot de passe'
                                         }) }}
 									<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-                                        {{ form_row(registrationForm.agreeTerms) }}
+									{{ form_row(registrationForm.agreeTerms) }}
 
-                                    <button type="submit" class="btn-primary btn-large">S'inscrire</button>
-                                    <div class="member-register mt-5">
-                                        <p> Vous êtes déjà inscrit ? <a href="register.html"> Connectez-vous maintenant.</a></p>
-                                    </div>
-                                        {{ form_end(registrationForm) }}
-                                </form>
+									<button type="submit" class="btn-primary btn-large">S'inscrire</button>
+									<div class="member-register mt-5">
+										<p>
+											Vous êtes déjà inscrit ?
+											<a href="register.html">
+												Connectez-vous maintenant.</a>
+										</p>
+									</div>
+									{{ form_end(registrationForm) }}
+								</form>
 
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 
-        </div>
-    </div>
+		</div>
+	</div>
 
 {% endblock %}

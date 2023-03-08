@@ -17,8 +17,7 @@ class ResetPasswordRequestFormType extends AbstractType
                 'attr' => [
                     'placeholder' => 'exemple@email.fr'
                 ]
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

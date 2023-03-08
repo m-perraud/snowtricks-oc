@@ -9,10 +9,8 @@ use App\Entity\Comment;
 use App\Form\FigureType;
 use App\Form\CommentType;
 use App\Repository\FigureRepository;
-use App\Repository\ImagesRepository;
 use App\Service\VideoProcessingService;
 use Doctrine\ORM\EntityManagerInterface;
-use Faker\Provider\Image;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,34 +20,33 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class FigureController extends AbstractController
 {
 
+
     #[Route('/figure/{slug}', name: 'figure_details')]
     public function figureDetails(FigureRepository $repo, string $slug, Request $request, EntityManagerInterface $manager): Response
     {
-    $figure = $repo->findOneBy(['slug' => $slug]);
+        $figure = $repo->findOneBy(['slug' => $slug]);
 
-    $comment = new Comment();
+        $comment = new Comment();
 
-    $form = $this->createForm(CommentType::class, $comment);
-    $form->handleRequest($request);
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
 
-    if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $comment->setCreatedAt(new \DateTimeImmutable());
             $comment->setLinkedFigure($figure);
-            // Avec le $this->getUser() on a directement le user connecté 
             $comment->setAuthor($this->getUser());
+            $manager->persist($comment);
+            $manager->flush();
 
-        $manager->persist($comment);
-        $manager->flush();
+            return $this->redirectToRoute('figure_details', ['slug' => $figure->getSlug()]);
+        }
 
-        return $this->redirectToRoute('figure_details', ['slug' => $figure->getSlug()]);
+        return $this->render('figure/figuredetails.html.twig', [
+            'controller_name' => 'FigureController',
+            'formComment' => $form->createView(),
+            'figures' => $figure
+        ]);
     }
-
-    return $this->render('figure/figuredetails.html.twig', [
-        'controller_name' => 'FigureController',
-        'formComment' => $form->createView(),
-        'figures' => $figure
-    ]);
-}
 
 
     #[Route('/figurenew', name: 'figure_new')]
@@ -57,8 +54,8 @@ class FigureController extends AbstractController
     public function figureNew(Figure $figure = null, Request $request, EntityManagerInterface $manager, VideoProcessingService $videoProc): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        
-        if(!$figure){
+
+        if (!$figure) {
             $figure = new Figure();
         }
         $slugger = new AsciiSlugger();
@@ -67,13 +64,11 @@ class FigureController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if(!$figure->getId()){
+            if (!$figure->getId()) {
                 $figure->setCreatedAt(new \DateTimeImmutable());
             } else {
                 $figure->setUpdatedAt(new \DateTimeImmutable());
             }
-
-            dd($figure->getLinkedFigureImages());
 
             $images = $form->get('images')->getData();
             $videos = $form->get('videos')->getData();
@@ -82,25 +77,26 @@ class FigureController extends AbstractController
 
             $haveMainImage = false;
 
-            foreach($images as $image){
-                $file = md5(uniqid()).'.'.$image->guessExtension();
+            foreach ($images as $image) {
+                $file = md5(uniqid()) . '.' . $image->guessExtension();
                 $image->move(
                     $this->getParameter('images_directory'),
                     $file
                 );
                 $img = new Images();
 
-                if(!$haveMainImage){
+                if (!$haveMainImage) {
                     $img->setMainImage(true);
                     $haveMainImage = true;
                 }
 
-                $img->setImageURL($file);
+                $img->setMainImage(false);
+                $img->setImageURL('/images/figures/' . $file);
                 $img->setLinkedFigure($figure);
                 $manager->persist($img);
             }
 
-            foreach($videos as $video){
+            foreach ($videos as $video) {
                 $videoURL = $videoProc->cleanURL($video);
 
                 $vid = new Videos();
@@ -120,36 +116,43 @@ class FigureController extends AbstractController
         return $this->render('figure/figurenew.html.twig', [
             'controller_name' => 'FigureController',
             'formFigure' => $form->createView(),
-            'editMode' => $figure->getId() ? true : false, 
+            'editMode' => $figure->getId() ? true : false,
             'figure' => $figure
         ]);
     }
 
 
     #[Route('/deleteimg/{id}', name: 'delete_img')]
-    public function deleteImage(EntityManagerInterface $doctrine, Images $image, Request $request){
+    public function deleteImage(EntityManagerInterface $doctrine, Images $image, Request $request)
+    {
 
         $csrfToken = $request->request->get('token');
 
-        if($this->isCsrfTokenValid('delete', $csrfToken)){
+        if ($this->isCsrfTokenValid('delete', $csrfToken)) {
             $doctrine->remove($image);
             $doctrine->flush();
         }
 
-            return $this->redirectToRoute('figure_mods', ['id' => $image->getLinkedFigure()->getId()]);
+        return $this->redirectToRoute('figure_mods', ['id' => $image->getLinkedFigure()->getId()]);
     }
 
     #[Route('/deletefig/{id}', name: 'delete_fig')]
-    public function deleteFigure(EntityManagerInterface $doctrine, Figure $figure, Request $request){
+    public function deleteFigure(EntityManagerInterface $doctrine, Figure $figure, Request $request, int $id)
+    {
 
-        //$csrfToken = $request->request->get('token');
+        $doctrine->remove($figure);
+        $doctrine->flush();
 
-        //if($this->isCsrfTokenValid('delete', $csrfToken)){
-            //$doctrine->remove($image);
-            //$doctrine->flush();
-        //}
-
-            return $this->redirectToRoute('app_home');
+        return $this->redirectToRoute('app_home');
     }
 
+    #[Route('/deletevid/{id}', methods: ['GET', 'DELETE'], name: 'delete_vid')]
+    public function deleteVideo(EntityManagerInterface $doctrine, Videos $video, Request $request, int $id): Response
+    {
+
+        $doctrine->remove($video);
+        $doctrine->flush();
+
+        return $this->redirectToRoute('figure_details', ['slug' => $figure->getSlug()]);
+    }
 }

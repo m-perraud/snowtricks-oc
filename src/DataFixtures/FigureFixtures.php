@@ -18,13 +18,14 @@ class FigureFixtures extends Fixture
 {
 
     public function __construct(private UserPasswordHasherInterface $userPasswordHasher)
-    {}
+    {
+    }
 
 
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create();
-                for($h = 1; $h <= 5; $h++){
+        for ($h = 1; $h <= 5; $h++) {
             $group = new FigGroup();
             $group->setName($faker->word());
 
@@ -32,14 +33,14 @@ class FigureFixtures extends Fixture
 
             $manager->flush();
 
-            for($i = 1; $i <= 3; $i++){
+            for ($i = 1; $i <= 3; $i++) {
                 $figure = new Figure();
                 $figure->setTitle($faker->word())
-                        ->setContent($faker->text())
-                        ->setCreatedAt(new \DateTimeImmutable())
-                        ->setUpdatedAt(new \DateTime())
-                        ->setFigGroup($group)
-                        ->setSlug($faker->slug());
+                    ->setContent($faker->text())
+                    ->setCreatedAt(new \DateTimeImmutable())
+                    ->setUpdatedAt(new \DateTime())
+                    ->setFigGroup($group)
+                    ->setSlug($faker->slug());
 
                 $manager->persist($figure);
 
@@ -65,20 +66,20 @@ class FigureFixtures extends Fixture
                 for ($k = 1; $k <= 2; $k++) {
                     $user = new User();
                     $user->setUsername($faker->userName())
-                            ->setPassword($this->userPasswordHasher->hashPassword($user, 'DataFixturesPass'))
-                            ->setProfilImage($faker->imageUrl(50, 50))
-                            ->setUserMail($faker->email())
-                            ->setIsVerified('0')
-                            ->setResetToken('');
+                        ->setPassword($this->userPasswordHasher->hashPassword($user, 'DataFixturesPass'))
+                        ->setProfilImage($faker->imageUrl(50, 50))
+                        ->setUserMail($faker->email())
+                        ->setIsVerified('0')
+                        ->setResetToken('');
                     $manager->persist($user);
 
                     $manager->flush();
 
                     $comment = new Comment();
                     $comment->setCreatedAt(new DateTimeImmutable())
-                            ->setContent($faker->text())
-                            ->setLinkedFigure($figure)
-                            ->setAuthor($user);
+                        ->setContent($faker->text())
+                        ->setLinkedFigure($figure)
+                        ->setAuthor($user);
                     $manager->persist($comment);
 
                     $manager->flush();

@@ -20,7 +20,7 @@ class HomeController extends AbstractController
 
         return $this->render('home/home.html.twig', [
             'controller_name' => 'HomeController',
-            'figures' => $figures 
+            'figures' => $figures
         ]);
     }
 
@@ -65,7 +65,7 @@ class HomeController extends AbstractController
 
         return $this->render('home/pagination.html.twig', [
             'controller_name' => 'HomeController',
-            'figures' => $figures 
+            'figures' => $figures
         ]);
     }
-} 
+}

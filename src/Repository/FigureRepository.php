@@ -17,6 +17,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class FigureRepository extends ServiceEntityRepository
 {
+
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Figure::class);
@@ -46,51 +48,51 @@ class FigureRepository extends ServiceEntityRepository
         $result = [];
 
         $query = $this->getEntityManager()->createQueryBuilder()
-                    ->select('f')
-                    ->from(Figure::class, 'f')
-                    ->setMaxResults($limit)
-                    ->setFirstResult(($page * $limit) - $limit);
+            ->select('f')
+            ->from(Figure::class, 'f')
+            ->setMaxResults($limit)
+            ->setFirstResult(($page * $limit) - $limit);
 
-                    $paginator = new Paginator($query);
-                    $data = $paginator->getQuery()->getResult();
+        $paginator = new Paginator($query);
+        $data = $paginator->getQuery()->getResult();
 
-                    if(empty($data)){
-                        return $result;
-                    }
+        if (empty($data)) {
+            return $result;
+        }
 
-                    $pages = ceil($paginator->count() / $limit);
+        $pages = ceil($paginator->count() / $limit);
 
-                    $result['data'] = $data;
-                    $result['pages'] = $pages;
-                    $result['page'] = $page;
-                    $result['limit'] = $limit;
+        $result['data'] = $data;
+        $result['pages'] = $pages;
+        $result['page'] = $page;
+        $result['limit'] = $limit;
 
         return $result;
     }
 
 
-//    /**
-//     * @return Figure[] Returns an array of Figure objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('f')
-//            ->andWhere('f.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('f.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    //    /**
+    //     * @return Figure[] Returns an array of Figure objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('f')
+    //            ->andWhere('f.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('f.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
 
-//    public function findOneBySomeField($value): ?Figure
-//    {
-//        return $this->createQueryBuilder('f')
-//            ->andWhere('f.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    //    public function findOneBySomeField($value): ?Figure
+    //    {
+    //        return $this->createQueryBuilder('f')
+    //            ->andWhere('f.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

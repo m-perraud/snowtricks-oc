@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Service;
 
@@ -20,8 +20,7 @@ class JWTService
     public function generate(array $header, array $payload, string $secret, int $validity = 10800): string
     {
 
-        if($validity > 0)
-        {
+        if ($validity > 0) {
             $now = new DateTimeImmutable();
             $exp = $now->getTimestamp() + $validity;
 
@@ -29,7 +28,7 @@ class JWTService
             $payload['exp'] = $exp;
         }
 
-        
+
 
         // On encode en base64
 
@@ -113,7 +112,7 @@ class JWTService
         $payload = $this->getPayload($token);
 
         // On régénère un token
-        $verifToken =$this->generate($header, $payload, $secret, 0);
+        $verifToken = $this->generate($header, $payload, $secret, 0);
 
         return $token === $verifToken;
     }

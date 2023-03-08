@@ -1,84 +1,71 @@
 {% extends 'base.html.twig' %}
 
-{% form_theme formFigure 'foundation_5_layout.html.twig' %}
+{% form_theme formFigure 'bootstrap_5_layout.html.twig' %}
 
 {% block body %}
 
 
-    <div id="main-wrapper">
-        <div class="site-wrapper-reveal">
+	<div id="main-wrapper">
+		<div class="site-wrapper-reveal">
+			<div class="login-register-page-area section-space--ptb_80">
+				<div class="container">
+					<div class="row ">
+						<div class="col-lg-6 m-auto">
+							<div class="login-content">
+								<div class="login-header mb-40">
+									<h5>Créer un nouvel article</h5>
+								</div>
 
-            <div class="login-register-page-area section-space--ptb_80">
-                <div class="container">
-                    <div class="row ">
-                        <div class="col-lg-6 m-auto">
-                            <div class="login-content">
+								{{ form_start(formFigure) }}
+								{{ form_widget(formFigure.title) }}
+								{{ form_widget(formFigure.content) }}
 
-                                <div class="login-header mb-40">
-                                    <h5>Créer un nouvel article</h5>
-                                </div>
+								{{ form_row(formFigure.figGroup) }}
+							</br>
+							{{ form_row(formFigure.videos) }}
+						</br>
+						{{ form_row(formFigure.images) }}
 
-{% if app.request.attributes.get('_route') == 'figure_mods' %}
-{{ form_start(formFigure) }}
+					</br>
 
-{{ form_row(formFigure.title) }}
-{{ form_row(formFigure.content) }}
+					{% for image in figure.linkedFigureImages %}
+						<div>
+							<img src="{{ image.imageUrl }}" alt="" width="150">
+							{% if image.mainImage %}
+								Image principale
+							{% else %}
+								{#Attention, si on est pas en form ça ne fonctionnera pas #}
+								<form action="{{ path('delete_img', {id: image.id})}}" method="post">
+									<input type="hidden" name="token" value="{{ csrf_token('delete') }}"/>
+									<button type="submit">Supprimer</button>
+								{% endif %}
+							</form>
+						</div>
+					{% endfor %}
 
+					{% for video in figure.linkedFigureVideos %}
+						<div>
+							{#Attention, si on est pas en form ça ne fonctionnera pas #}
+							<form action="{{ path('delete_vid', {id: video.id})}}" method="post">
+								<input type="hidden" name="token" value="{{ csrf_token('delete') }}"/>
+								<button type="submit">Supprimer</button>
+							</form>
+						</div>
+					{% endfor %}
 
-<h2>Images</h2>
-        {% for image in figure.linkedFigureImages %}
-            <div>
-                <img src="{{ image.imageUrl }}" alt="" width="150">
+					<button type="submit" class="btn btn-warning">
+						{% if editMode %}
+							Enregistrer les modifications
+						{% else %}
+							Ajouter la figure
+						{% endif %}
+					</button>
 
-            {% if image.mainImage %}
-                Image principale
-            {% else %}
-            {#Attention, si on est pas en form ça ne fonctionnera pas #}
-            <form action="{{ path('delete_img', {id: image.id})}}" method="post">
-            <input type="hidden" name="token" value="{{ csrf_token('delete') }}"/>
-            <button type="submit">Supprimer</button>
-            {% endif %}
-            </form>
+					{{ form_errors(formFigure.title) }}
+					{{ form_end(formFigure) }}
 
-            </div>
-        {% endfor %}
-    {% endif %}
-
-    {% for video in figure.linkedFigureVideos %}
-            <div>
-            {#Attention, si on est pas en form ça ne fonctionnera pas #}
-            <form action="{{ path('delete_vid', {id: video.id})}}" method="post">
-            <input type="hidden" name="token" value="{{ csrf_token('delete') }}"/>
-            <button type="submit">Supprimer</button>
-            </form>
-            </div>
-        {% endfor %}
-
-
-{{ form_errors(formFigure.title) }}
-</div>
-
-    <button type="submit" class="btn btn-warning"> 
-        {% if editMode %}
-            Enregistrer les modifications
-        {% else %}
-        Ajouter la figure 
-        {% endif %}
-    </button>
-
-{{ form_end(formFigure) }}
-
-
-                            </div>
-
-                        </div>
-                        
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-
-{% endblock %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div></div></div>{% endblock %}
