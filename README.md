@@ -22,9 +22,10 @@ We will need composer for the project.
 The database informations are stored in the .env file :
 
 - `DATABASE_URL="mysql://root:@127.0.0.1:3306/snowtricks"`
-You have to modify those informations if you won't use the same. 
 
+You have to modify those informations if you won't use the same. 
 To set up the database, you will need to follow these steps : 
+
 • Create the database if not already done : 
 - `php bin/console doctrine:database:create`
 
