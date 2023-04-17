@@ -51,11 +51,12 @@
 										</br>
 										{{video.id }}
 									</br>
-									<button type="button" data-bs-toggle="modal" data-bs-target="#modal-video{{ video.id }}">
-										<i class="icofont-ui-delete"></i>
-									</button>
-									{% include '_delete_modal.html.twig' with { 'btn_label': 'Supprimer la vidéo', 'btn_url': path('delete_vid', {'id': video.id }), 'modalBase':'video', 'modalId': video.id } %}
 
+												<form action="{{ path('delete_img', {id: video.id})}}" method="post">
+													<button type="submit">Supprimer</button>
+												</form>
+
+									
 								</div>
 							{% endfor  %}
 						</div>

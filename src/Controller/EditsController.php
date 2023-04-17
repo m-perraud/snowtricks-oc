@@ -110,6 +110,6 @@ class EditsController extends AbstractController
     {
         $doctrine->remove($video);
         $doctrine->flush();
-        return $this->redirectToRoute('figure_details', ['slug' => $video->getLinkedFigure()->getSlug()]);
+        return $this->redirectToRoute('figure_mods', ['id' => $video->getLinkedFigure()->getId()]);
     }
 }
