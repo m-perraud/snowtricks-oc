@@ -42,7 +42,7 @@ To set up the database, you will need to follow these steps :
  - `https://github.com/mailhog/MailHog`
 
  To use it, you simply have to install it, start it, and configure the following in your .env : 
- - `MAILER_DSN=smtp://localhost:1025`
+ - `MAILER_DSN=smtp://localhost:8025`
  
 You will be able to access the mailer on your localhost:1025. 
  
