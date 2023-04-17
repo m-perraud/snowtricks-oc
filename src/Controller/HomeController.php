@@ -31,4 +31,15 @@ class HomeController extends AbstractController
         ]);
     }
 
+    #[Route('/pagination', name: 'app_pagination')]
+    public function pagination(Request $request, FigureRepository $repo): Response
+    {
+        $page = $request->query->getInt('page', 1);
+        $figures = $repo->findFiguresPaginated($page, 6);
+
+        return $this->render('home/pagination.html.twig', [
+            'controller_name' => 'HomeController',
+            'figures' => $figures
+        ]);
+    }
 }
