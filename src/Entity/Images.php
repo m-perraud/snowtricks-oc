@@ -19,8 +19,8 @@ class Images
     #[ORM\Column]
     private ?bool $mainImage = null;
 
-    #[ORM\ManyToOne(inversedBy: 'LinkedFigureImages', cascade: ['persist'])]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(inversedBy: 'LinkedFigureImages')]
+    #[ORM\JoinColumn(nullable: false, onDelete:"CASCADE")]
     private ?Figure $linkedFigure = null;
 
     public function getId(): ?int

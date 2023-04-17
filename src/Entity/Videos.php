@@ -16,8 +16,8 @@ class Videos
     #[ORM\Column(length: 255)]
     private ?string $videoURL = null;
 
-    #[ORM\ManyToOne(inversedBy: 'linkedFigureVideos')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(inversedBy: 'linkedFigureVideos', cascade:['persist'])]
+    #[ORM\JoinColumn(nullable: false, onDelete:"CASCADE")]
     private ?Figure $linkedFigure = null;
 
     public function getId(): ?int

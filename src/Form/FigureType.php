@@ -38,21 +38,11 @@ class FigureType extends AbstractType
                 'multiple' => true,
                 'mapped' => false,
                 'required' => false,
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please add a file',
-                    ])
-                ],
             ])
             ->add('videos', TextareaType::class, [
                 'label' => "URL de la vidéo ( pour intégrer plusieurs vidéos, mettre une virgule sans espace entre chaque URL )",
                 'mapped' => false,
                 'required' => false,
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please add an URL',
-                    ])
-                ],
             ]);
     }
 

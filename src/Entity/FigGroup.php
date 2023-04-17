@@ -15,7 +15,7 @@ class FigGroup
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToMany(mappedBy: 'figGroup', targetEntity: Figure::class)]
+    #[ORM\OneToMany(mappedBy: 'figGroup', targetEntity: Figure::class, cascade:['persist'])]
     private Collection $groupName;
 
     #[ORM\Column(length: 255)]

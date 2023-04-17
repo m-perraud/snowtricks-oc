@@ -31,35 +31,11 @@ class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('/page404', name: 'page_404')]
-    public function page404(): Response
-    {
-        return $this->render('home/page404.html.twig', [
-            'controller_name' => 'HomeController',
-        ]);
-    }
-
-    #[Route('/page403', name: 'page_403')]
-    public function page403(): Response
-    {
-        return $this->render('home/page403.html.twig', [
-            'controller_name' => 'HomeController',
-        ]);
-    }
-
-    #[Route('/page500', name: 'page_500')]
-    public function page500(): Response
-    {
-        return $this->render('home/page500.html.twig', [
-            'controller_name' => 'HomeController',
-        ]);
-    }
 
     #[Route('/pagination', name: 'app_pagination')]
     public function pagination(Request $request, FigureRepository $repo): Response
     {
         $page = $request->query->getInt('page', 1);
-
         $figures = $repo->findFiguresPaginated($page, 6);
 
         return $this->render('home/pagination.html.twig', [

@@ -49,7 +49,6 @@ class RegistrationController extends AbstractController
 
             $token = $jwt->generate($header, $payload, $this->getParameter('app.jwtsecret'));
 
-            // On envoie un mail
             $mail->send(
                 'no-reply@monsite.net',
                 $user->getUserMail(),
@@ -72,7 +71,6 @@ class RegistrationController extends AbstractController
     public function verifyUser($token, JWTService $jwt, UserRepository $userRepo, EntityManagerInterface $manager): Response
     {
         // On vérifie si le token est valide, n'a pas expiré, et n'a pas été modifié
-
         if ($jwt->isValid($token) && !$jwt->isExpired($token) && $jwt->check($token, $this->getParameter('app.jwtsecret'))) {
             $payload = $jwt->getPayload($token);
             $user = $userRepo->find($payload['user_id']);
@@ -90,7 +88,6 @@ class RegistrationController extends AbstractController
         }
 
         $this->addFlash('danger', 'Le token est invalide ou a expiré');
-
         return $this->redirectToRoute('app_home');
     }
 

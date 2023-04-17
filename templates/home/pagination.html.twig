@@ -12,35 +12,36 @@
 					{% endfor  %}
 
 				</div>
-				<div class="team-content">
-					<div class="team-share-top">
-						<a href="{{ path('figure_details', {'slug': figure.slug } ) }}" class="shate-action-button">
-							<i class="icofont-eye-alt"></i>
-						</a>
-						<ul class="team-social-share">
-							{% if app.user %}
-								<li>
-									<a href="{{ path('figure_mods', {'id': figure.id } ) }}">
-										<i class="icofont-edit"></i>
-									</a>
-								</li>
-								<li>
-									<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-{{ figure.id }}">
-										<i class="icofont-ui-delete"></i>
-									</button>
-								</li>
-								{% include '_delete_modal.html.twig' with { 'btn_label': 'Supprimer la figure', 'btn_url': path('delete_fig', {'id': figure.id }), 'modalId': figure.id } %}
-							{% endif %}
-						</ul>
-					</div>
-					<div class="team-member-info">
-						<h6 class="name-title">{{ figure.title }}</h6>
-					</div>
+				<h6 class="name-title">{{ figure.title }}</h6>
+				<div class="team-share-top">
+
+					<a href="{{ path('figure_details', {'slug': figure.slug } ) }}" class="shate-action-button">
+						<i class="icofont-eye-alt"></i>
+					</a>
+					<ul class="team-social-share">
+						{% if app.user %}
+							<li>
+								<a href="{{ path('figure_mods', {'id': figure.id } ) }}">
+									<i class="icofont-edit"></i>
+								</a>
+							</li>
+							<li>
+								<button type="button" data-bs-toggle="modal" data-bs-target="#modal-{{ figure.id }}">
+									<i class="icofont-ui-delete"></i>
+								</button>
+							</li>
+							{% include '_delete_modal.html.twig' with { 'btn_label': 'Supprimer la figure', 'btn_url': path('delete_fig', {'id': figure.id }), 'modalId': figure.id } %}
+						{% endif %}
+
+					</ul>
 				</div>
+				<div class="team-member-info"></div>
+
 			</div>
 		</div>
 	{% endfor %}
 </div>
+
 
 {% set path = 'app_pagination' %}
 {% set pages = figures.pages %}

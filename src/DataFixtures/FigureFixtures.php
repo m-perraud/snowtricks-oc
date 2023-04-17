@@ -40,9 +40,7 @@ class FigureFixtures extends Fixture
                     ->setUpdatedAt(new \DateTime())
                     ->setFigGroup($group)
                     ->setSlug($faker->slug());
-
                 $manager->persist($figure);
-
                 $manager->flush();
 
                 for ($j = 1; $j <= 3; $j++) {
@@ -50,7 +48,6 @@ class FigureFixtures extends Fixture
                     $vid->setLinkedFigure($figure)
                         ->setVideoURL($faker->imageUrl(350, 200));
                     $manager->persist($vid);
-
                     $manager->flush();
 
                     $img = new Images();
@@ -58,7 +55,6 @@ class FigureFixtures extends Fixture
                         ->setImageURL('/images/figures/fixture.jpg')
                         ->setMainImage($j === 1);
                     $manager->persist($img);
-
                     $manager->flush();
                 }
 
@@ -71,7 +67,6 @@ class FigureFixtures extends Fixture
                         ->setIsVerified('0')
                         ->setResetToken('');
                     $manager->persist($user);
-
                     $manager->flush();
 
                     $comment = new Comment();
@@ -80,7 +75,6 @@ class FigureFixtures extends Fixture
                         ->setLinkedFigure($figure)
                         ->setAuthor($user);
                     $manager->persist($comment);
-
                     $manager->flush();
                 }
             }

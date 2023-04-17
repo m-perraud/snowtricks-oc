@@ -69,6 +69,7 @@ class FigureRepository extends ServiceEntityRepository
     }
 
 
+
     //    /**
     //     * @return Figure[] Returns an array of Figure objects
     //     */

@@ -15,7 +15,7 @@ class VideoProcessingService
         $videoURL = str_replace('https://youtu.be/', 'https://www.youtube.com/embed/', $videoURL);
         $videoURL = str_replace('https://www.youtube.com/watch?v=', 'https://www.youtube.com/embed/', $videoURL);
 
-        // Daylimotion
+        // Dailymotion
         $videoURL = str_replace('https://www.dailymotion.com/video/', 'https://www.dailymotion.com/embed/video/', $videoURL);
         $videoURL = str_replace('https://dai.ly/', 'https://www.dailymotion.com/embed/video/', $videoURL);
 

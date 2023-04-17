@@ -2,13 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\FigureRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\FigureRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: FigureRepository::class)]
+#[UniqueEntity(fields: ['title'], message: 'Une figure avec ce titre existe déjà.')]
 class Figure
 {
     #[ORM\Id]
@@ -16,7 +18,7 @@ class Figure
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -35,13 +37,13 @@ class Figure
     #[ORM\JoinColumn(nullable: false)]
     private ?FigGroup $figGroup = null;
 
-    #[ORM\OneToMany(mappedBy: 'linkedFigure', targetEntity: Comment::class)]
+    #[ORM\OneToMany(mappedBy: 'linkedFigure', targetEntity: Comment::class, cascade:['persist', 'remove'])]
     private Collection $linkedFigure;
 
-    #[ORM\OneToMany(mappedBy: 'linkedFigure', targetEntity: Images::class)]
+    #[ORM\OneToMany(mappedBy: 'linkedFigure', targetEntity: Images::class, cascade:['persist', 'remove'])]
     private Collection $LinkedFigureImages;
 
-    #[ORM\OneToMany(mappedBy: 'linkedFigure', targetEntity: Videos::class)]
+    #[ORM\OneToMany(mappedBy: 'linkedFigure', targetEntity: Videos::class, cascade:['persist', 'remove'])]
     private Collection $linkedFigureVideos;
 
     public function __construct()

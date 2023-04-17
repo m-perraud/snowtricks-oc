@@ -21,9 +21,7 @@ class LoginController extends AbstractController
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        // Get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
-        // Last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('login/index.html.twig', [
@@ -42,26 +40,22 @@ class LoginController extends AbstractController
     public function forgottenPassword(Request $request, UserRepository $userRepo, TokenGeneratorInterface $tokenGenerator, EntityManagerInterface $manager, SendMailService $mail): Response
     {
         $form = $this->createForm(ResetPasswordRequestFormType::class);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = $userRepo->findOneByUserMail($form->get('email')->getData());
+            $user = $userRepo->findOneByUsername($form->get('username')->getData());
 
             if ($user) {
-                //On génère un token de réinitialisation
                 $token = $tokenGenerator->generateToken();
                 $user->setResetToken($token);
                 $manager->persist($user);
                 $manager->flush();
 
-                // On génère un lien de réinitialisation du mdp
                 $url = $this->generateUrl('reset_pass', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
 
                 // On crée les données du mail
                 $context = compact('url', 'user');
 
-                // On envoie le mail
                 $mail->send(
                     'no-reply@snowtricks.fr',
                     $user->getUserMail(),
@@ -86,16 +80,13 @@ class LoginController extends AbstractController
     #[Route(path: '/forgotpass/{token}', name: 'reset_pass')]
     public function resetPass(string $token, Request $request, UserRepository $userRepo, EntityManagerInterface $manager, UserPasswordHasherInterface $passwordHasher): Response
     {
-        // On vérifie si on a ce token dans la base de données
         $user = $userRepo->findOneByResetToken($token);
 
         if ($user) {
             $form = $this->createForm(ResetPasswordFormType::class);
-
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                // On efface le token
                 $user->setResetToken('');
                 $user->setPassword(
                     $passwordHasher->hashPassword(

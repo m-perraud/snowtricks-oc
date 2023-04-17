@@ -9,6 +9,7 @@ use App\Entity\Comment;
 use App\Form\FigureType;
 use App\Form\CommentType;
 use App\Repository\FigureRepository;
+use App\Repository\CommentRepository;
 use App\Service\VideoProcessingService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,9 +21,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class FigureController extends AbstractController
 {
     #[Route('/figure/{slug}', name: 'figure_details')]
-    public function figureDetails(FigureRepository $repo, string $slug, Request $request, EntityManagerInterface $manager): Response
+    public function figureDetails(FigureRepository $repo, CommentRepository $repoComment, string $slug, Request $request, EntityManagerInterface $manager): Response
     {
         $figure = $repo->findOneBy(['slug' => $slug]);
+        $page = $request->query->getInt('page', 1);
+        $comments = $repoComment->findCommentsPaginated($page, 6);
 
         $comment = new Comment();
 
@@ -42,38 +45,37 @@ class FigureController extends AbstractController
         return $this->render('figure/figuredetails.html.twig', [
             'controller_name' => 'FigureController',
             'formComment' => $form->createView(),
-            'figures' => $figure
+            'figure' => $figure,
+            'comments' => $comments
         ]);
     }
 
 
     #[Route('/figurenew', name: 'figure_new')]
-    #[Route('/figure/{id}/edit', name: 'figure_mods')]
     public function figureNew(Figure $figure = null, Request $request, EntityManagerInterface $manager, VideoProcessingService $videoProc): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        if (!$figure) {
-            $figure = new Figure();
-        }
+        $figure = new Figure();
         $slugger = new AsciiSlugger();
-
         $form = $this->createForm(FigureType::class, $figure);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if (!$figure->getId()) {
-                $figure->setCreatedAt(new \DateTimeImmutable());
-            } else {
-                $figure->setUpdatedAt(new \DateTimeImmutable());
-            }
+            $figure->setCreatedAt(new \DateTimeImmutable());
 
             $images = $form->get('images')->getData();
             $videos = $form->get('videos')->getData();
             $videos = explode(',', $videos);
-
-
             $haveMainImage = false;
+
+            if (!$images) {
+                $img = new Images();
+                $img->setImageURL('/images/figures/fixture.jpg');
+                $img->setMainImage(true);
+                $img->setLinkedFigure($figure);
+                $manager->persist($img);
+            }
 
             foreach ($images as $image) {
                 $file = md5(uniqid()) . '.' . $image->guessExtension();
@@ -82,7 +84,6 @@ class FigureController extends AbstractController
                     $file
                 );
                 $img = new Images();
-
                 $img->setMainImage(false);
 
                 if (!$haveMainImage) {
@@ -105,11 +106,10 @@ class FigureController extends AbstractController
             }
 
             $figure->setSlug($slugger->slug($figure->getTitle()));
-
             $manager->flush();
 
-
-            return $this->redirectToRoute('figure_details', ['slug' => $figure->getSlug()]);
+            $this->addFlash('success', 'Votre figure a été créée avec succès.');
+            return $this->redirectToRoute('app_home');
         }
 
         return $this->render('figure/figurenew.html.twig', [
@@ -121,34 +121,15 @@ class FigureController extends AbstractController
     }
 
 
-    #[Route('/deleteimg/{id}', name: 'delete_img')]
-    public function deleteImage(EntityManagerInterface $doctrine, Images $image, Request $request)
+    #[Route('/comments', name: 'app_comments')]
+    public function commentsPagination(Request $request, CommentRepository $repo): Response
     {
-        $csrfToken = $request->request->get('token');
+        $page = $request->query->getInt('page', 1);
+        $comments = $repo->findCommentsPaginated($page, 6);
 
-        if ($this->isCsrfTokenValid('delete', $csrfToken)) {
-            $doctrine->remove($image);
-            $doctrine->flush();
-        }
-
-        return $this->redirectToRoute('figure_mods', ['id' => $image->getLinkedFigure()->getId()]);
-    }
-
-    #[Route('/deletefig/{id}', name: 'delete_fig')]
-    public function deleteFigure(EntityManagerInterface $doctrine, Figure $figure)
-    {
-        $doctrine->remove($figure);
-        $doctrine->flush();
-
-        return $this->redirectToRoute('app_home');
-    }
-
-    #[Route('/deletevid/{id}', methods: ['GET', 'DELETE'], name: 'delete_vid')]
-    public function deleteVideo(EntityManagerInterface $doctrine, Videos $video): Response
-    {
-        $doctrine->remove($video);
-        $doctrine->flush();
-
-        return $this->redirectToRoute('figure_details', ['slug' => $video->getLinkedFigure()->getSlug()]);
+        return $this->render('home/comments.html.twig', [
+            'controller_name' => 'FigureController',
+            'comments' => $comments
+        ]);
     }
 }
