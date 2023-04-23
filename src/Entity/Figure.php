@@ -11,6 +11,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: FigureRepository::class)]
 #[UniqueEntity(fields: ['title'], message: 'Une figure avec ce titre existe déjà.')]
+#[UniqueEntity(fields: ['slug'], message: 'Une figure avec ce slug existe déjà.')]
 class Figure
 {
     #[ORM\Id]
@@ -18,7 +19,7 @@ class Figure
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, unique: true)]
+    #[ORM\Column(length: 100, unique: true)]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -30,7 +31,7 @@ class Figure
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $updatedAt = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 190, unique: true)]
     private ?string $slug = null;
 
     #[ORM\ManyToOne(inversedBy: 'groupName')]

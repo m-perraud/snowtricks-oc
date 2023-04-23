@@ -1,38 +1,29 @@
 <div class="row">
-			<div class="col-lg-10 m-auto">
-				<div class="comment-list-wrapper">
-					<h3 class="widget-title mb-30">Commentaires</h3>
-					{% for comment in figure.linkedFigure %}
-						<ol class="comment-list">
-							<li class="comment">
-								<div class="comment-2">
-									<div class="comment-author-info">
-										<div class="comment-author vcard">
-											<img alt="" src="{{ comment.author.profilImage }}" style="width: 40px;">
-										</div>
-										<div class="comment-content">
-											<div class="meta">
-												<div class="comment-content-top">
-													<div class="comment-actions">
-														<h6 class="fn">{{ comment.author.username }}</h6>
-														<span class="time">
-															{{ comment.createdAt|date('d-m-Y') }}
-														</span>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="comment-text">
-										<p>{{ comment.content }}</p>
-									</div>
-								</div>
-							{% endfor  %}
-						</li>
-					</ol>
+	{% for comment in comments.data %}
+		<div class="comment-2">
+			<div class="comment-author-info">
+				<div class="comment-author vcard">
+					<img alt="" src="{{ comment.author.profilImage }}" style="width: 40px;">
+				</div>
+				<div class="comment-content">
+					<div class="meta">
+						<div class="comment-content-top">
+							<div class="comment-actions">
+								<h6 class="fn">{{ comment.author.username }}</h6>
+								<span class="time">
+									{{ comment.createdAt|date('d-m-Y') }}
+								</span>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
-
+			<div class="comment-text">
+				<p>{{ comment.content }}</p>
+			</div>
+		</div>
+	{% endfor  %}
+</div>
 
 {% set path = 'app_comments' %}
 {% set pages = comments.pages %}
@@ -52,4 +43,3 @@
 		</div>
 	</center>
 {% endif %}
-

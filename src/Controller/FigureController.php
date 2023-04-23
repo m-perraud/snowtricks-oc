@@ -24,8 +24,15 @@ class FigureController extends AbstractController
     public function figureDetails(FigureRepository $repo, CommentRepository $repoComment, string $slug, Request $request, EntityManagerInterface $manager): Response
     {
         $figure = $repo->findOneBy(['slug' => $slug]);
+
+        if(is_null($figure)){
+            throw $this->createNotFoundException('Cette page n\'existe pas.');
+        }
+
         $page = $request->query->getInt('page', 1);
-        $comments = $repoComment->findCommentsPaginated($page, 6);
+        $comments = $repoComment->findCommentsPaginated($figure, $page, 6);
+
+        //dd($comments);
 
         $comment = new Comment();
 
@@ -41,6 +48,7 @@ class FigureController extends AbstractController
 
             return $this->redirectToRoute('figure_details', ['slug' => $figure->getSlug()]);
         }
+
 
         return $this->render('figure/figuredetails.html.twig', [
             'controller_name' => 'FigureController',
@@ -122,10 +130,10 @@ class FigureController extends AbstractController
 
 
     #[Route('/comments', name: 'app_comments')]
-    public function commentsPagination(Request $request, CommentRepository $repo): Response
+    public function commentsPagination(Request $request, CommentRepository $repo, Figure $figure): Response
     {
         $page = $request->query->getInt('page', 1);
-        $comments = $repo->findCommentsPaginated($page, 6);
+        $comments = $repo->findCommentsPaginated($figure, $page, 6);
 
         return $this->render('home/comments.html.twig', [
             'controller_name' => 'FigureController',

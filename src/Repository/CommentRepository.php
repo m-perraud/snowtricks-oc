@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Figure;
 use App\Entity\Comment;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -41,14 +42,15 @@ class CommentRepository extends ServiceEntityRepository
     }
 
     
-    public function findCommentsPaginated(int $page, int $limit = 10): array
+    public function findCommentsPaginated(Figure $figure, int $page, int $limit = 6): array
     {
         $limit = abs($limit);
         $result = [];
 
-        $query = $this->getEntityManager()->createQueryBuilder()
-            ->select('f')
-            ->from(Comment::class, 'f')
+        $query = $this->createQueryBuilder('t')
+            ->andWhere('t.linkedFigure = :figure')
+            ->setParameter('figure', $figure)
+            ->orderBy('t.createdAt', 'DESC')
             ->setMaxResults($limit)
             ->setFirstResult(($page * $limit) - $limit);
 
